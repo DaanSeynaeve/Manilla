@@ -48,3 +48,7 @@ uit de packages *core*,*player* en *exception* aan te passen.
 ## VRAGEN/FOUTEN/VOORSTELLEN ##
 
 Laat me iets weten :) Er ontbreekt nog een hoop functionaliteit, maar de kern zou er moeten zijn.
+
+## DAAN, ER STAAT EEN TAALFOUT IN JE README ##
+
+Oops! Laat het me weten en ik fix het ;)
