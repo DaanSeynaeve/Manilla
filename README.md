@@ -23,7 +23,7 @@ vragen te stellen aan je AI. De klasse **InformationHandle** geeft je toegang to
 zoals o.a. de kaarten die reeds gespeeld zijn, wat de troef is, ...
 
 Deze klasses kunnen ( en zullen ) nog wijzigen, maar zullen een gelijkaardige functionaliteit behouden.
-Er is een diagramma aanwezig dat een totaalbeeld schetst. Mocht je vragen of kritiek op het
+Er is een diagram aanwezig dat een totaalbeeld schetst. Mocht je vragen of kritiek op het
 design hebben: laat me iets weten! :)
 
 ### Taal: ###
