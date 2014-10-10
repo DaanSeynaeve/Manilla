@@ -16,6 +16,14 @@ Je mag zoveel klassen maken als je wil op voorwaarde dat:
 * 1 van je klassen de interface 'Intelligence' implementeert
 * Je plaatst je klasse in het package 'AI' of in een eigen package dat je naam draagt (indien je veel klassen zou hebben)
 
+De code is het engels geschreven, dus zet dit liefst ook voort.
+Vertaling van Manille-termen:
+
+- slag = trick
+- troef = trump
+- suit = 'kleur' van de kaart (hearts, spades, ...)
+- symbol = teken van de kaart (king, jack, queen, ...)
+
 ## TESTEN VAN JE ALGORITME ##
 
 Om je algo te testen kan je de Match klasse gebruiken.
