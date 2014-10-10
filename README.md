@@ -14,9 +14,19 @@ maar dit is uiteindelijk de bedoeling.
 
 Je mag zoveel klassen maken als je wil op voorwaarde dat:
 
-- 1 van je klassen de interface 'Intelligence' implementeert
+- 1 van je klassen de interface **Intelligence** implementeert
 - Je plaatst je klasse in het package 'AI' of in een eigen package dat je naam draagt (indien je veel klassen zou hebben)
 
+### API: ###
+De eerder vermeldde klasse **Intelligence** is de required interface. Deze gebruikt het programma om
+vragen te stellen aan je AI. De klasse **InformationHandle** geeft je toegang tot informatie over het speelveld,
+zoals o.a. de kaarten die reeds gespeeld zijn, wat de troef is, ...
+
+Deze klasses kunnen ( en zullen ) nog wijzigen, maar zullen een gelijkaardige functionaliteit behouden.
+Er is een diagramma aanwezig dat een totaalbeeld schetst. Mocht je vragen hebben, of zelfs kritiek op het
+design, laat me iets weten! :)
+
+### Taal: ###
 De code is het engels geschreven, dus zet dit liefst ook voort.
 Vertaling van Manille-termen:
 
