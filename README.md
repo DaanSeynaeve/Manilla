@@ -8,8 +8,7 @@ Nadien maak je pull-requests om je code bij het geheel te voegen.
 ## WEDSTRIJD ##
 
 Het is nog te vroeg om competities tussen de verschillende AI's op te zetten,
-maar dit is uiteindelijk de bedoeling, samen met toffe experimentjes alla:
-'hoe slim is het nu om die blinde aas uit te komen?'
+maar dit is uiteindelijk de bedoeling,.
 
 ## SCHRIJVEN VAN JE ALGORITME ##
 
