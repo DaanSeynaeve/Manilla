@@ -4,7 +4,7 @@
 
 **Belangrijk**: maak een fork van deze repo en werk daarop!
 Nadien maak je pull-requests om je code bij het geheel te voegen.
-Als je niet weet hoe je dat doet: ik help wel :)
+Als je niet meer zeker weet hoe dat werkt: ik help wel :)
 
 ## WEDSTRIJD ##
 
