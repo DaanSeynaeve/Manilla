@@ -13,8 +13,8 @@ maar dit is uiteindelijk de bedoeling,.
 ## SCHRIJVEN VAN JE ALGORITME ##
 
 Je mag zoveel klassen maken als je wil op voorwaarde dat:
-* 1 van je klassen de interface 'Intelligence' implementeert
-* Je plaatst je klasse in het package 'AI' of in een eigen package dat je naam draagt (indien je veel klassen zou hebben)
+- 1 van je klassen de interface 'Intelligence' implementeert
+- Je plaatst je klasse in het package 'AI' of in een eigen package dat je naam draagt (indien je veel klassen zou hebben)
 
 De code is het engels geschreven, dus zet dit liefst ook voort.
 Vertaling van Manille-termen:
