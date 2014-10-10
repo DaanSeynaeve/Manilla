@@ -43,7 +43,7 @@ Om je algo te testen kan je de Match klasse gebruiken.
 
 ## KERNPROGRAMMA ##
 
-Voorlopig hou ik me bezig met de kern van het programma, gelieve dus geen klassen
+Voorlopig hou ik me bezig met de kern van het programma. Gelieve dus geen klassen
 uit de packages *core*,*player* en *exception* aan te passen.
 
 ## VRAGEN/FOUTEN/VOORSTELLEN ##
