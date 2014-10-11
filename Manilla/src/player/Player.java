@@ -1,25 +1,19 @@
 package player;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import core.Card;
 import core.Hand;
 import core.Suit;
-import exception.InvalidCardException;
 
-
-public class Player {
+public abstract class Player {
 	
-	public Player(String name, Intelligence intelligence) {
+	public Player(String name) {
 		this.hand = new Hand();
 		this.name = name;
-		this.intelligence = intelligence;
 	}
-	
-	/*****************
-	 * HAND
-	 *****************/
+
+	/**********************************************************************
+	 * NAME
+	 **********************************************************************/
 	
 	private String name;
 	
@@ -30,10 +24,10 @@ public class Player {
 	public String toString() {
 		return getName();
 	}
-
-	/*****************
+	
+	/**********************************************************************
 	 * HAND
-	 *****************/
+	 **********************************************************************/
 	
 	Hand hand;
 	
@@ -41,44 +35,16 @@ public class Player {
 		return hand;
 	}
 	
-	/*****************
-	 * INTELLIGENCE
-	 *****************/
+	/**********************************************************************
+	 * ACTIONS
+	 **********************************************************************/
 	
-	private Intelligence intelligence;
-	
-	public void setIntelligence(Intelligence intelligence) {
-		this.intelligence = intelligence;
-	}
-	
-	public Suit chooseTrump() {
-		return intelligence.chooseTrump(getHandAsList());
-	}
-	
-	private List<Card> getHandAsList() {
-		List<Card> copy = new ArrayList<Card>();
-		for ( Card card : hand ) {
-			copy.add(card);
-		}
-		return copy;
-	}
+	public abstract Suit chooseTrump();
 
-	public Card chooseCard(InformationHandle info) throws InvalidCardException {
-		Card card = intelligence.chooseCard(getHandAsList(), info);
-		if ( !hand.contains(card) ) {
-			throw new InvalidCardException(card);
-		}
-		return card;
-	}
+	public abstract boolean knocks(Suit trump);
 
-	public Intelligence getIntelligence() {
-		return intelligence;
-	}
-
-	public boolean knocks(Suit trump) {
-		return intelligence.chooseToKnock(getHandAsList(),trump);
-	}
+	public abstract Card chooseCard(InformationHandle info);
 	
+	public abstract void notify(InformationHandle info);
 	
-
 }

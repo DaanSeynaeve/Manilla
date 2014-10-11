@@ -1,7 +1,8 @@
-package player;
+package AI;
 
 import java.util.List;
 
+import player.InformationHandle;
 import core.Card;
 import core.Suit;
 
