@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import player.InformationHandle;
-import player.Intelligence;
 import core.Card;
 import core.Suit;
 

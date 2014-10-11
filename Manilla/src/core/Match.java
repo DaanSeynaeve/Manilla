@@ -1,8 +1,8 @@
 package core;
 
 import AI.ExampleIntelligence;
+import AI.ArtificialPlayer;
 import exception.InvalidCardException;
-import player.Player;
 import player.Team;
 
 /**
@@ -15,10 +15,10 @@ public class Match {
 
 	public static void main(String[] args) throws InvalidCardException {
 		
-		Player t1p1 = new Player("Freddy", new ExampleIntelligence());
-		Player t1p2 = new Player("Patrick", new ExampleIntelligence());
-		Player t2p1 = new Player("Bertha", new ExampleIntelligence());
-		Player t2p2 = new Player("Joeri", new ExampleIntelligence());
+		ArtificialPlayer t1p1 = new ArtificialPlayer("Freddy", new ExampleIntelligence());
+		ArtificialPlayer t1p2 = new ArtificialPlayer("Patrick", new ExampleIntelligence());
+		ArtificialPlayer t2p1 = new ArtificialPlayer("Bertha", new ExampleIntelligence());
+		ArtificialPlayer t2p2 = new ArtificialPlayer("Joeri", new ExampleIntelligence());
 		
 		System.out.println("========== PLAYERS ==========");
 		System.out.println(t1p1 + " : " + t1p1.getIntelligence().identify());
