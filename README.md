@@ -16,7 +16,6 @@ maar dit is uiteindelijk de bedoeling.
 Je mag zoveel klassen maken als je wilt op voorwaarde dat:
 
 - 1 van je klassen de interface **Intelligence** implementeert
-- Je plaatst je klasse in het package 'AI' of in een eigen package dat je naam draagt (indien je veel klassen zou hebben)
 
 ### API: ###
 De eerder vermeldde klasse **Intelligence** is de required interface. Deze gebruikt het programma om
