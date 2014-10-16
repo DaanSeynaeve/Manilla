@@ -1,39 +1,45 @@
 package core;
 
-import AI.ExampleIntelligence;
 import AI.ArtificialPlayer;
 import exception.InvalidCardException;
+import player.Player;
 import player.Team;
 
 /**
- * Main class for the application. The main method of the
- * match class will setup the players, teams, intelligences, ...
- * and initiate rounds.
+ * Main class of the system.
+ * As for now, the run() method simulates a single round.
  * @author Daan
  */
 public class Match {
+	
+	private Player p1;
+	private Player p2;
+	private Player p3;
+	private Player p4;
+	
+	public Match(Player p1, Player p2, Player p3, Player p4) {
+		this.p1 = p1;
+		this.p2 = p2;
+		this.p3 = p3;
+		this.p4 = p4;
+	}
 
-	public static void main(String[] args) throws InvalidCardException {
-		
-		ArtificialPlayer t1p1 = new ArtificialPlayer("Freddy", new ExampleIntelligence());
-		ArtificialPlayer t1p2 = new ArtificialPlayer("Patrick", new ExampleIntelligence());
-		ArtificialPlayer t2p1 = new ArtificialPlayer("Bertha", new ExampleIntelligence());
-		ArtificialPlayer t2p2 = new ArtificialPlayer("Joeri", new ExampleIntelligence());
+	public void run() throws InvalidCardException {
 		
 		System.out.println("========== PLAYERS ==========");
-		System.out.println(t1p1 + " : " + t1p1.getIntelligence().identify());
-		System.out.println(t1p2 + " : " + t1p2.getIntelligence().identify());
-		System.out.println(t2p1 + " : " + t2p1.getIntelligence().identify());
-		System.out.println(t2p2 + " : " + t2p2.getIntelligence().identify());
+		System.out.println(p1 + " : " + ((ArtificialPlayer) p1).getIntelligence().identify());
+		System.out.println(p2 + " : " + ((ArtificialPlayer) p2).getIntelligence().identify());
+		System.out.println(p3 + " : " + ((ArtificialPlayer) p3).getIntelligence().identify());
+		System.out.println(p4 + " : " + ((ArtificialPlayer) p4).getIntelligence().identify());
 		
-		Team t1 = new Team(t1p1,t1p2);
-		Team t2 = new Team(t2p1,t2p2);
+		Team t1 = new Team(p1,p2);
+		Team t2 = new Team(p3,p4);
 		
 		System.out.println("========== TEAMS ==========");
-		System.out.println("Team 1: " + t1p1 + ", " + t1p2);
-		System.out.println("Team 2: " + t2p1 + ", " + t2p2);
+		System.out.println("Team 1: " + p1 + ", " + p2);
+		System.out.println("Team 2: " + p3 + ", " + p4);
 		
-		Round r1 = new Round(t1,t2,t1p1);
+		Round r1 = new Round(t1,t2,p1);
 		
 		// score calculation
 		r1.run();
