@@ -3,10 +3,10 @@ package core;
 import java.util.ArrayList;
 import java.util.List;
 
-import exception.InvalidCardException;
 import player.InformationHandle;
 import player.Player;
 import player.Team;
+import exception.InvalidCardException;
 
 
 /**
@@ -248,6 +248,20 @@ public class Round {
 	
 	private Player getStarter() {
 		return sequence[0];
+	}
+	
+	/**
+	 * Returns the index of the given player in the sequence
+	 * @param player
+	 * @return index
+	 */
+	public int getPositionInSequence(Player player) {
+		for ( int i = 0 ; i < 4 ; i++ ) {
+			if ( sequence[i] == player ) {
+				return i;
+			}
+		}
+		throw new RuntimeException("unexpected");
 	}
 	
 	/**********************************************************************

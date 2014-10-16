@@ -12,7 +12,6 @@ public class ExampleIntelligence implements Intelligence {
 
 	/**
 	 * Will choose the first valid card in hand.
-	 * Close enough.
 	 */
 	@Override
 	public Card chooseCard(List<Card> hand, InformationHandle info) {
@@ -51,15 +50,15 @@ public class ExampleIntelligence implements Intelligence {
 	}
 
 	/**
-	 * IDENTIFY YOURSELF
+	 * Returns the name of the AI.
 	 */
 	@Override
 	public String identify() {
-		return "[example manille-AI v1.0: Dalek]";
+		return "[ex. Manille-AI v1.0]";
 	}
 
 	/**
-	 * I am not the one who knocks
+	 * Never knocks.
 	 */
 	@Override
 	public boolean chooseToKnock(List<Card> hand, Suit trump) {

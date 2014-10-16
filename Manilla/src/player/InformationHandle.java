@@ -5,6 +5,13 @@ import java.util.List;
 
 import core.*;
 
+/**
+ * This class allows intelligent actors to ask questions to the system.
+ * <br/><br/>
+ * <b>Part of the AI API:</b> custom AI's can use an object of this class (when provided)
+ * to inspect certain aspects of the system.
+ * @author Daan
+ */
 public class InformationHandle {
 	
 	Round round;
@@ -28,7 +35,6 @@ public class InformationHandle {
 	 * Returns a (sorted) list of the cards on the field.
 	 * The list will be empty if no cards were played yet.
 	 * @return a List of Cards
-	 * TODO: check if correct order
 	 */
 	public List<Card> inspectField() {
 		return new ArrayList<Card>(round.getField());
@@ -58,6 +64,15 @@ public class InformationHandle {
 	 */
 	public int getMultiplier() {
 		return round.getMultiplier();
+	}
+	
+	/**
+	 * Returns the players position in the current trick's order of play.
+	 * This is a number ranging from 0 (first player to play a card) to 3 (last person to play a card).
+	 * @return position (int)
+	 */
+	public int getTurn() {
+		return round.getPositionInSequence(player);
 	}
 
 }
