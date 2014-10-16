@@ -88,4 +88,12 @@ public class Hand implements java.lang.Iterable<Card> {
 		return suitCards;
 	}
 
+	public List<Card> getAsList() {
+		List<Card> copy = new ArrayList<Card>();
+		for ( Card card : this ) {
+			copy.add(card);
+		}
+		return copy;
+	}
+
 }

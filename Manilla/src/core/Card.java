@@ -1,8 +1,7 @@
 package core;
 
 /**
- * Represents a card, which has a suit, a symbol, a natural order
- * used to compare to others and a value in points.
+ * Represents a card, which has a suit and a symbol.
  * 
  * @author Daan Seynaeve
  * @version 0.1

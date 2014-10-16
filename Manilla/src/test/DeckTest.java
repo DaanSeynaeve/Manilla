@@ -1,7 +1,5 @@
 package test;
 
-import static org.junit.Assert.*;
-
 import java.util.List;
 
 import org.junit.Test;
@@ -23,6 +21,7 @@ public class DeckTest {
 		
 		for ( int x = 0 ; x < runs ; x++) {
 			Deck d = new Deck();
+			d.multiRiffleShuffle(7);
 			// according to literature 7 riffle shuffles is enough to produce a random result
 			// d.multiRiffleShuffle(7);
 			// d.shuffle();
