@@ -49,8 +49,4 @@ uit de packages *core*,*player* en *exception* aan te passen.
 
 Laat me iets weten :) Er ontbreekt nog een hoop functionaliteit, maar de kern zou er moeten zijn.
 
-## DAAN, ER STAAT EEN TAALFOUT IN JE README ##
-
-Oops! Laat het me weten en ik fix het ;)
-
 ![playing_card_suits2.png](https://bitbucket.org/repo/pn87gp/images/2613342406-playing_card_suits2.png)
