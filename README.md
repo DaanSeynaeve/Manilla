@@ -26,7 +26,7 @@ Er is een diagram aanwezig dat een totaalbeeld schetst. Mocht je vragen of kriti
 design hebben: laat me iets weten! :)
 
 ### Taal: ###
-De code is het engels geschreven, dus zet dit liefst ook voort.
+De code is het engels geschreven.
 Vertaling van Manille-termen:
 
 - slag = trick
