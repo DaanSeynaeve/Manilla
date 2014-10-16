@@ -3,8 +3,7 @@
 ## OVER DE REPOSITORY ##
 
 **Belangrijk**: maak een fork van deze repo en werk daarop!
-Nadien maak je pull-requests om je code bij het geheel te voegen.
-Als je niet meer zeker weet hoe dat werkt: ik help wel :)
+Nadien maak je pull-requests om je code bij het geheel te voegen. (SWOP-systeem)
 
 ## WEDSTRIJD ##
 
