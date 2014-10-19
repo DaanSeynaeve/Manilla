@@ -36,13 +36,13 @@ Vertaling van Manille-termen:
 
 ## TESTEN VAN JE ALGORITME ##
 
-Om je algo te testen kan je de Match klasse gebruiken.
+Om je algo te testen kan je de MainGraphical klasse runnen.
 ( of een eigen test-klasse schrijven )
 
 ## KERNPROGRAMMA ##
 
-Voorlopig hou ik me bezig met de kern van het programma. Gelieve dus geen klassen
-uit de packages *core*,*player* en *exception* aan te passen.
+Voorlopig hou ik me bezig met de kern van het programma. Gelieve dus geen bestaande
+klassen aan te passen.
 
 ## VRAGEN/FOUTEN/VOORSTELLEN ##
 
