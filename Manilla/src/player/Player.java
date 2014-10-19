@@ -47,4 +47,20 @@ public abstract class Player {
 	
 	public abstract void notify(InformationHandle info);
 	
+	public abstract void notifyOfTrick(Card[] trick);
+	
+	/**
+	 * Notifies the player of the scores for this round (above 30)
+	 * and the current total score for both teams.
+	 * @param ally
+	 * @param enemy
+	 * @param allyTotal
+	 * @param enemyTotal
+	 */
+	public abstract void notifyOfRoundScore(int ally, int enemy, int allyTotal, int enemyTotal);
+
+	public abstract String identify();
+
+	public abstract void notifyOfNewRound();
+	
 }

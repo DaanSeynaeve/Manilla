@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import player.Pool;
+
 /**
  * This class represents a deck, from which cards can be drawn.
  * A deck can be shuffled.
@@ -17,6 +19,19 @@ public class Deck {
 	public Deck() {
 		cards = new ArrayList<Card>();
 		generateCards();
+	}
+	
+	/**
+	 * Reconstructs a deck from the pools of teams.
+	 */
+	public Deck(Pool pool1, Pool pool2) {
+		cards = new ArrayList<Card>();
+		for ( Card card : pool1 ) {
+			cards.add(card);
+		}
+		for ( Card card : pool2 ) {
+			cards.add(card);
+		}
 	}
 	
 	private void generateCards() {
