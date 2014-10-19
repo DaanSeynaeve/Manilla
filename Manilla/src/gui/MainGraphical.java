@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,8 @@ import java.awt.Color;
 public class MainGraphical extends JFrame {
 
 	private static final long serialVersionUID = 8701125966647077641L;
+	private static final String TITLE = "Manilla";
+	private static final String VERSION = "v1.0";
 	private JPanel contentPane;
 	
 	@SuppressWarnings("unchecked")
@@ -49,26 +52,116 @@ public class MainGraphical extends JFrame {
 	private JComboBox<String> aiPlayer3;
 	private JComboBox<String> aiPlayer4;
 	
+	private static Object startLock;
+	private static MainGraphical frame;
+	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		startLock = new Object();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainGraphical frame = new MainGraphical();
+					frame = new MainGraphical();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
+		
+		synchronized(startLock) {
+			try {
+				startLock.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		Thread t = new Thread() {
+			public void run() {
+				MainGraphical.start();
+			}
+		};
+		
+		t.run();
+		
 	}
 
+	
+	/**********************************************************************
+	 * START
+	 **********************************************************************/
+	
+	static List<GraphicalPlayer> humans;
+	
+	private static void start() {
+		Player p1 = createPlayer(frame.namePlayer1,frame.aiPlayer1);
+		Player p2 = createPlayer(frame.namePlayer2,frame.aiPlayer2);
+		Player p3 = createPlayer(frame.namePlayer3,frame.aiPlayer3);
+		Player p4 = createPlayer(frame.namePlayer4,frame.aiPlayer4);
+		
+		frame.dispose();
+		
+		Player[] sequence = {p1,p3,p2,p4};
+		for ( GraphicalPlayer p : humans ) {
+			initGUI(p,sequence);
+		}
+		Match m = new Match(p1,p2,p3,p4);
+		try {
+			m.run();
+		} catch (InvalidCardException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected static Player createPlayer(JTextField textField, JComboBox<String> comboBox) {
+		if ( !comboBox.getSelectedItem().equals("Human") ) {
+			try {
+				return new ArtificialPlayer(textField.getText(),ais[comboBox.getSelectedIndex()].newInstance());
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			return null;
+		} else {
+			GraphicalPlayer player = new GraphicalPlayer(textField.getText(),new LocalUIController());
+			humans.add(player);
+			return player;
+		}
+	}
+	
+	protected static void initGUI(GraphicalPlayer p, Player[] sequence) {
+		int index = getIndex(p, sequence);
+		UIController uic = p.getUIController();
+		try {
+			uic.initialize();
+			uic.setFrameTitle(TITLE + " - " + p.getName());
+			uic.setNames(p.getName(), sequence[(index+1) % 4].getName(), sequence[(index+2) % 4].getName(), sequence[(index+3) % 4].getName());
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static int getIndex(Player p, Player[] sequence) {
+		for ( int i = 0 ; i < 4 ; i++ ) {
+			if (sequence[i].equals(p)) {
+				return i;
+			}
+		}
+		return 0;
+	}
+	
+	/**********************************************************************
+	 * COMPONENTS
+	 **********************************************************************/
+	
 	/**
 	 * Create the frame.
 	 */
 	public MainGraphical() {
+		humans = new ArrayList<GraphicalPlayer>();
+		setTitle(TITLE + " " + VERSION);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 510, 305);
@@ -76,8 +169,12 @@ public class MainGraphical extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		initComponents();
+	}
+	
+	private void initComponents() {
 		
-		JLabel lblNewLabel = new JLabel("Welcome to Manilla v1.0!");
+		JLabel lblNewLabel = new JLabel("Welcome to " + TITLE + " " + VERSION + "!");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setHorizontalTextPosition(SwingConstants.LEFT);
@@ -94,7 +191,8 @@ public class MainGraphical extends JFrame {
 		for ( Class<? extends Intelligence> c : ais ) {
 			try { options.add(c.newInstance().identify()); } catch (Exception e) {}
 		}
-		String[] optArray = options.toArray(new String[options.size()]);
+		String[] optArray = options.toArray(new String[options.size()+1]);
+		optArray[optArray.length-1] = "Human";
 		
 		aiPlayer1 = new JComboBox<>(optArray);
 		aiPlayer1.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -175,18 +273,12 @@ public class MainGraphical extends JFrame {
 		btnStart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					Player p1 = new ArtificialPlayer(namePlayer1.getText(),ais[aiPlayer1.getSelectedIndex()].newInstance());
-					Player p2 = new ArtificialPlayer(namePlayer2.getText(),ais[aiPlayer2.getSelectedIndex()].newInstance());
-					Player p3 = new ArtificialPlayer(namePlayer3.getText(),ais[aiPlayer3.getSelectedIndex()].newInstance());
-					Player p4 = new ArtificialPlayer(namePlayer4.getText(),ais[aiPlayer4.getSelectedIndex()].newInstance());
-					Match m = new Match(p1,p2,p3,p4);
-					m.run();
-				} catch (InvalidCardException | InstantiationException | IllegalAccessException e) {
-					e.printStackTrace();
+				synchronized(startLock) {
+					startLock.notify();
 				}
 			}
 		});
 		contentPane.add(btnStart);
 	}
+
 }

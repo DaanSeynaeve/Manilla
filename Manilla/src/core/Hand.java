@@ -96,4 +96,13 @@ public class Hand implements java.lang.Iterable<Card> {
 		return copy;
 	}
 
+	public boolean containsSuitOtherThan(Suit suit) {
+		for ( Suit s : Suit.values() ) {
+			if ( !s.equals(suit) && contains(s) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }
