@@ -25,18 +25,18 @@ public class Match {
 
 	public void run() throws InvalidCardException {
 		
-		System.out.println("========== PLAYERS ==========");
-		System.out.println(p1 + " : " + p1.identify());
-		System.out.println(p2 + " : " + p2.identify());
-		System.out.println(p3 + " : " + p3.identify());
-		System.out.println(p4 + " : " + p4.identify());
+		Logger.log("========== PLAYERS ==========");
+		Logger.log(p1 + " : " + p1.identify());
+		Logger.log(p2 + " : " + p2.identify());
+		Logger.log(p3 + " : " + p3.identify());
+		Logger.log(p4 + " : " + p4.identify());
 		
 		Team t1 = new Team(p1,p2);
 		Team t2 = new Team(p3,p4);
 		
-		System.out.println("========== TEAMS ==========");
-		System.out.println("Team 1: " + p1 + ", " + p2);
-		System.out.println("Team 2: " + p3 + ", " + p4);
+		Logger.log("========== TEAMS ==========");
+		Logger.log("Team 1: " + p1 + ", " + p2);
+		Logger.log("Team 2: " + p3 + ", " + p4);
 		
 		Deck deck = new Deck();
 		deck.shuffle();
@@ -63,9 +63,27 @@ public class Match {
 		t1.getPool().reset();
 		t2.getPool().reset();
 		
-		System.out.println("========== SCORES ==========");
-		System.out.println("Team 1: " + t1.getTotalScore());
-		System.out.println("Team 2: " + t2.getTotalScore());
+		Logger.log("========== SCORES ==========");
+		Logger.log("Team 1: " + t1.getTotalScore());
+		Logger.log("Team 2: " + t2.getTotalScore());
+		
+		this.testScoreTeam1 = t1.getTotalScore();
+		this.testScoreTeam2 = t2.getTotalScore();
+	}
+	
+	/**********************************************************************
+	 * TODO: TEMP TESTING
+	 **********************************************************************/
+	
+	private int testScoreTeam1 = 0;
+	private int testScoreTeam2 = 0;
+	
+	public int getScoreOfTeam1() {
+		return testScoreTeam1;
+	}
+	
+	public int getScoreOfTeam2() {
+		return testScoreTeam2;
 	}
 
 }

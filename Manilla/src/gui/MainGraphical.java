@@ -21,6 +21,7 @@ import AI.ArtificialPlayer;
 import AI.ExampleIntelligence;
 import AI.Intelligence;
 import AI.ward.Giskard;
+import core.Logger;
 import core.Match;
 import exception.InvalidCardException;
 
@@ -61,6 +62,9 @@ public class MainGraphical extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		Logger.setPrinting(true);
+		Logger.setRemember(true);
+		
 		startLock = new Object();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

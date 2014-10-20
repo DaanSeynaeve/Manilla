@@ -61,9 +61,9 @@ public class Round {
 		buildSequence(starter);
 		
 		// STEP 1.2: EXAMINE SEQUENCE
-		System.out.println("------- PLAYER ORDER -------");
+		Logger.log("------- PLAYER ORDER -------");
 		for ( Player player : sequence ) {
-			System.out.println(player);
+			Logger.log(player);
 		}
 		
 		// STEP 2: DEAL CARDS
@@ -73,13 +73,13 @@ public class Round {
 		}
 		
 		// STEP 2.2: EXAMINE HANDS
-		System.out.println("====== " + dealer + " deals: ======");
+		Logger.log("====== " + dealer + " deals: ======");
 		for ( Player player : sequence) {
-			System.out.println(player + " got the following: ");
+			Logger.log(player + " got the following: ");
 			for ( Card c : player.getHand() ) {
-				System.out.println(c);
+				Logger.log(c);
 			}
-			System.out.println("---------------------------- ");
+			Logger.log("---------------------------- ");
 		}
 		
 		// STEP 3: DEFINE TRUMP & KNOCKING
@@ -89,8 +89,8 @@ public class Round {
 		}
 		
 		// STEP 3.2: EXAMINE THE TRUMP
-		System.out.println(dealer + " chose the trump: " + trump);
-		System.out.println("---------------------------- ");
+		Logger.log(dealer + " chose the trump: " + trump);
+		Logger.log("---------------------------- ");
 		
 		// STEP 4: TRICKS
 		for (int trick = 1 ; trick <= 8 ; trick++) {
@@ -101,7 +101,7 @@ public class Round {
 				if (isValidCard(card, player)) {
 					field.add(card);
 					player.getHand().removeCard(card);
-					System.out.println(player + " plays " + card);
+					Logger.log(player + " plays " + card);
 					for ( Player peer : sequence ) {
 						peer.notify(new InformationHandle(peer,this));
 					}
@@ -111,7 +111,7 @@ public class Round {
 			}
 			// STEP 4.2: DETERMINE WINNER
 			Player winner = getOwner(getBestCard());
-			System.out.println("-- Trick winner is " + winner + " --");
+			Logger.log("-- Trick winner is " + winner + " --");
 			Team winningTeam = getTeam(winner);
 			
 			// STEP 4.3: CARDS ARE AWARDED TO WINNING TEAMS POOL

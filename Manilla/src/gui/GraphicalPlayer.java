@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import player.InformationHandle;
 import player.Player;
 import core.Card;
+import core.Logger;
 import core.Suit;
 
 public class GraphicalPlayer extends Player {
@@ -38,7 +39,7 @@ public class GraphicalPlayer extends Player {
 			try {
 				lock.wait();
 			} catch (InterruptedException e) {
-				System.out.println("UI Lock communication problem");
+				Logger.log("UI Lock communication problem");
 				e.printStackTrace();
 			}
 		}
@@ -53,7 +54,7 @@ public class GraphicalPlayer extends Player {
 		uic.updateHand(getHand().getAsList());
 		Suit trump = uic.fetchChosenTrump();
 		uic.updateTrump(trump);
-		System.out.println(":- GUI: Chose Trump");
+		Logger.log(":- GUI: Chose Trump");
 		return trump;
 	}
 
@@ -73,15 +74,15 @@ public class GraphicalPlayer extends Player {
 		for(;;) {
 			Object lock = uic.setupCardChoice();
 			
-			System.out.println(":- GUI: Waiting for Card choice");
+			Logger.log(":- GUI: Waiting for Card choice");
 			waitForResponse(lock);
-			System.out.println(":- GUI: Chose Card");
+			Logger.log(":- GUI: Chose Card");
 			
 			chosen = uic.fetchChosenCard();
 			if ( info.isValidCard(chosen)) {
 				return chosen;
 			} else {
-				System.out.println(":- GUI: Invalid!");
+				Logger.log(":- GUI: Invalid!");
 				uic.informOfInvalidCardChoice();
 			}
 		}
