@@ -7,13 +7,14 @@ import AI.ArtificialPlayer;
 import AI.ExampleIntelligence;
 import AI.Intelligence;
 import AI.ward.Giskard;
+import AI.daan.Project2501;
 import core.Logger;
 import core.Match;
 public class AIVersusTest {
 
 	private static final int RUNS = 10000;
-	private static final Class<? extends Intelligence> teamA = Giskard.class;
-	private static final Class<? extends Intelligence> teamB = ExampleIntelligence.class;
+	private static final Class<? extends Intelligence> teamA = Project2501.class;
+	private static final Class<? extends Intelligence> teamB = Giskard.class;
 	
 	@Test
 	public void test() throws Exception {
