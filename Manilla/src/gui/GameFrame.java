@@ -3,6 +3,8 @@ package gui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -19,6 +21,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -27,6 +30,7 @@ import core.Card;
 import core.Suit;
 
 import javax.swing.SwingConstants;
+import javax.swing.JButton;
 
 public class GameFrame extends JFrame {
 
@@ -162,6 +166,19 @@ public class GameFrame extends JFrame {
 		trumpPanel.setLayout(new GridBagLayout());
 		trumpPanel.setBounds(9, 30, 96, 96);
 		right.add(trumpPanel);
+		
+		btnPreviousTrick = new JButton("<html><center>Previous<br/>Trick</center></html>");
+		btnPreviousTrick.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnPreviousTrick.setBounds(9, 137, 95, 43);
+		btnPreviousTrick.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				displayPreviousTrick();				
+			}
+		});
+		btnPreviousTrick.setEnabled(false);
+		
+		right.add(btnPreviousTrick);
 	}
 	
 	/**********************************************************************
@@ -183,6 +200,7 @@ public class GameFrame extends JFrame {
 	private Map<JLabel,Card> handMap;
 	private JLabel selected;
 	private boolean handActive = false;
+	private Object handActiveLock = new Object();
 	
 	private static final int HAND_PADDING = 4;
 	private static final int HAND_X_OFFSET = 18;
@@ -191,11 +209,15 @@ public class GameFrame extends JFrame {
 	private static final Color SELECTION_COLOR = Color.WHITE;
 	
 	public void activateHand() {
-		this.handActive = true;
+		synchronized(handActiveLock) {
+			this.handActive = true;
+		}
 	}
 	
 	public void deactivateHand() {
-		this.handActive = false;
+		synchronized(handActiveLock) {
+			this.handActive = false;
+		}
 	}
 	
 	public void updateHand(List<Card> hand) {
@@ -212,17 +234,21 @@ public class GameFrame extends JFrame {
 			cardLabel.addMouseListener(new MouseListener() {
 				@Override
 				public void mouseEntered(MouseEvent e) {
-					if ( handActive ) {
-						selected = ((JLabel) e.getSource());
-						unborderAllHandCards();
-						selected.setBorder(BorderFactory.createLineBorder(SELECTION_COLOR,SELECTION_THICKNESS));
+					synchronized(handActiveLock) {
+						if ( handActive ) {
+							selected = ((JLabel) e.getSource());
+							unborderAllHandCards();
+							selected.setBorder(BorderFactory.createLineBorder(SELECTION_COLOR,SELECTION_THICKNESS));
+						}
 					}
 				}
 
 				@Override
 				public void mouseExited(MouseEvent e) {
-					if ( handActive ) { 
-						unborderAllHandCards();
+					synchronized(handActiveLock) {
+						if ( handActive ) { 
+							unborderAllHandCards();
+						}
 					}
 				}
 
@@ -231,8 +257,10 @@ public class GameFrame extends JFrame {
 
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					if ( handActive && e.getButton() == MouseEvent.BUTTON1) {
-						submitCard();
+					synchronized(handActiveLock) {
+						if ( handActive && e.getButton() == MouseEvent.BUTTON1) {
+							submitCard();
+						}
 					}
 				}
 
@@ -303,6 +331,30 @@ public class GameFrame extends JFrame {
 		trumpPanel.removeAll();
 		trumpPanel.add(new JLabel(getSuitImage(trump),JLabel.CENTER));
 		trumpPanel.revalidate();
+	}
+	
+	/**********************************************************************
+	 * PREVIOUS TRICK
+	 **********************************************************************/
+	
+	private JPanel trickCache = new JPanel();
+	private JButton btnPreviousTrick;
+	
+	public void updatePreviousTrick(Card[] trick) {
+		synchronized(trickCache) {
+			trickCache.removeAll();
+			for ( Card card : trick ) {
+				trickCache.add(new JLabel(getCardImage(card)));
+			}
+			trickCache.revalidate();
+		}
+		btnPreviousTrick.setEnabled(true);
+	}
+	
+	public void displayPreviousTrick() {
+		synchronized(trickCache) {
+			JOptionPane.showMessageDialog(this,trickCache,"Previous Trick",JOptionPane.PLAIN_MESSAGE);
+		}		
 	}
 	
 	/**********************************************************************
