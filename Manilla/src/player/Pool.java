@@ -1,19 +1,18 @@
 package player;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import core.Card;
 
 /**
- * Represents a pool of cards. Specific elements can't be removed:
- * there is the possibility to add a card or remove all cards. The cards
- * are stored in no particular order. The pool can be used to count the points
- * of the cards in it. The pool only remembers a specified
- * amount of cards (4)
+ * Represents a pool of cards. These are all the cards a team has won
+ * during a round.
  * 
  * @author Daan Seynaeve
  */
-public class Pool {
+public class Pool implements Iterable<Card> {
 	
 	/**
 	 * Initializes a new pool
@@ -21,38 +20,19 @@ public class Pool {
 	public Pool() {
 		reset();
 	}
-
+	
 	/**********************************************************************
-	 * SCORE
+	 * CARDS
 	 **********************************************************************/
 	
-	private int score;
+	private List<Card> cardList;
 	
-	public int getScore() {
-		return score;
+	public int getSize() {
+		return cardList.size();
 	}
-
-	/**********************************************************************
-	 * BUFFER
-	 **********************************************************************/
-	
-	private static final int BUFFER_SIZE = 4;
-	private Card[] cards = new Card[4];
-	
-	public Card[] getCards() {
-		return this.cards;
-	}
-	
-	/**********************************************************************
-	 * PUSH & RESET
-	 **********************************************************************/
-
-	private int next = 0;
 	
 	public void push(Card card) {
-		score +=  card.getValue();
-		cards[next] = card;
-		next = ( next + 1 ) % BUFFER_SIZE;
+		cardList.add(card);
 	}
 	
 	public void pushAll(List<Card> cards) {
@@ -62,17 +42,32 @@ public class Pool {
 	}
 	
 	public void reset() {
-		for ( int i = 0 ; i < BUFFER_SIZE ; i++ ) { cards[i] = null; }
-		score = 0;
+		cardList = new ArrayList<Card>();
 	}
 	
 	public boolean isEmpty() {
-		for ( Card card : cards ) {
-			if (card != null) {
-				return false;
-			}
+		return cardList.isEmpty();
+	}
+	
+	/**********************************************************************
+	 * SCORE
+	 **********************************************************************/
+	
+	public int getScore() {
+		int score = 0;
+		for ( Card card : cardList ) {
+			score += card.getValue();
 		}
-		return true;
+		return score;
+	}
+	
+	/**********************************************************************
+	 * ITERATE
+	 **********************************************************************/
+
+	@Override
+	public Iterator<Card> iterator() {
+		return cardList.iterator();
 	}
 
 }

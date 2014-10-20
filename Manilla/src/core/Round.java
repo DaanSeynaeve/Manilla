@@ -23,15 +23,19 @@ public class Round {
 	Suit trump;
 	List<Card> field;
 	Player[] sequence;
+	Card[] previousTrick;
 	int multiplier;
+	Deck deck;
 	
-	public Round(Team team1, Team team2, Player dealer ) {
+	public Round(Team team1, Team team2, Player dealer, Deck deck) {
 		this.team1 = team1;
 		this.team2 = team2;
 		this.dealer = dealer;
 		this.field = new ArrayList<Card>();
 		this.sequence = new Player[4];
 		this.multiplier = 1;
+		this.previousTrick = null;
+		this.deck = deck;
 	}
 	
 	/**********************************************************************
@@ -48,6 +52,7 @@ public class Round {
 	
 	/**
 	 * Executes a sequence of 8 tricks and returns the winning team
+
 	 * @throws InvalidCardException 
 	 */
 	public void run() throws InvalidCardException {
@@ -62,9 +67,10 @@ public class Round {
 		}
 		
 		// STEP 2: DEAL CARDS
-		Deck deck = new Deck();
-		deck.shuffle();
 		deal323(deck);
+		for ( Player player : sequence ) {
+			player.notifyOfNewRound();
+		}
 		
 		// STEP 2.2: EXAMINE HANDS
 		System.out.println("====== " + dealer + " deals: ======");
@@ -96,6 +102,9 @@ public class Round {
 					field.add(card);
 					player.getHand().removeCard(card);
 					System.out.println(player + " plays " + card);
+					for ( Player peer : sequence ) {
+						peer.notify(new InformationHandle(peer,this));
+					}
 				} else {
 					throw new InvalidCardException(card);
 				}
@@ -107,13 +116,26 @@ public class Round {
 			
 			// STEP 4.3: CARDS ARE AWARDED TO WINNING TEAMS POOL
 			winningTeam.getPool().pushAll(field);
-			field.clear();
 			
-			// STEP 4.4: REBUILD PLAYER SEQUENCE
+			// STEP 4.4: STORE THE TRICK AS PREVIOUS TRICK, NOTIFY PLAYERS & CLEAR FIELD
+			storeTrick();
+			
+			// STEP 4.5: REBUILD PLAYER SEQUENCE
 			buildSequence(winner);
 		}
 	}
 	
+	private void storeTrick() {
+		previousTrick = new Card[4];
+		for ( int i = 0 ; i < 4 ; i++ ) {
+			previousTrick[i] = field.get(i);
+		}
+		field.clear();
+		for ( Player p : sequence ) {
+			p.notifyOfTrick(previousTrick);
+		}
+	}
+
 	/**********************************************************************
 	 * CARD PLAYING LOGIC
 	 **********************************************************************/
@@ -195,8 +217,15 @@ public class Round {
 								} else {
 									// CASE 2.2.2.2.1.1.2: player has worse trump
 									if ( card.getSuit().equals(trump)) {
-										// CASE 2.2.2.2.1.1.2.1: player underbought --> shouldn't have
-										return false;
+										// CASE 2.2.2.2.1.1.2.1: player underbought
+										if ( player.getHand().containsSuitOtherThan(trump)) {
+											// CASE: couldn't do anything else
+											return false;
+										} else {
+											// CASE: could do something else --> should have done that
+											return true;
+										}
+										
 									} else {
 										// CASE 2.2.2.2.1.1.2.2: player didn't play trump: OK
 										return true;
@@ -244,10 +273,6 @@ public class Round {
 		} else {
 			return team1.getPlayer1();
 		}
-	}
-	
-	private Player getStarter() {
-		return sequence[0];
 	}
 	
 	/**
@@ -351,18 +376,13 @@ public class Round {
 	public List<Card> getField() {
 		return field;
 	}
-
+	
 	/**
-	 * Returns the previous trick if there is one,
+	 * Returns a clone of the previous trick if there is one,
 	 * else returns null.
 	 */
-	public Card[] getPreviousTrick() {
-		Team previousWinner = getTeam(getStarter());
-		if ( previousWinner.getPool().isEmpty() ) {
-			return null;
-		} else {
-			return previousWinner.getLastTrick();
-		}
+	public Card[] getPreviousTrickClone() {
+		return previousTrick.clone();
 	}
 	
 }

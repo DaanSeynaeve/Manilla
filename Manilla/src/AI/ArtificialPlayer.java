@@ -64,5 +64,25 @@ public class ArtificialPlayer extends Player {
 		}
 		return copy;
 	}
+
+	@Override
+	public String identify() {
+		return intelligence.identify();
+	}
+
+	@Override
+	public void notifyOfTrick(Card[] trick) {
+		// TODO necessary for artificial players?
+	}
+
+	@Override
+	public void notifyOfRoundScore(int ally, int enemy, int allyTotal, int enemyTotal) {
+		// TODO necessary for artificial players?
+	}
+
+	@Override
+	public void notifyOfNewRound() {
+		// TODO necessary for artificial players?
+	}
 	
 }

@@ -28,7 +28,7 @@ public class InformationHandle {
 	 * @return an array of Cards of size 4, or null.
 	 */
 	public Card[] getPreviousTrick() {
-		return round.getPreviousTrick();
+		return round.getPreviousTrickClone();
 	}
 	
 	/**
@@ -42,11 +42,16 @@ public class InformationHandle {
 	
 	/**
 	 * Checks if the given card is valid to play at this time.
+	 * Returns false if the card is null.
 	 * @param card
 	 * @return true if it is
 	 */
 	public boolean isValidCard(Card card) {
-		return round.isValidCard(card, player);
+		if ( card != null ) {
+			return round.isValidCard(card, player);
+		} else {
+			return false;
+		}
 	}
 	
 	/**

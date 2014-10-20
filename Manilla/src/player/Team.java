@@ -1,7 +1,5 @@
 package player;
 
-import core.Card;
-
 /**
  * Represents a team of players. A team also has a pool of cards
  * containing the cards they have won during a certain period of
@@ -68,22 +66,7 @@ public class Team {
 	 */
 	public boolean hasPlayer(Player player) {
 		return (getPlayer1() == player || getPlayer2() == player);
-	}
-	
-// TODO: needed?
-//	/**
-//	 * Returns player n
-//	 * @param n
-//	 * @return player
-//	 */
-//	public Player getPlayer(int n) {
-//		if ( n == 1 ) {
-//			return getPlayer1();
-//		} else {
-//			return getPlayer2();
-//		}
-//	}
-	
+	}	
 	
 	/**
 	 * Returns the other player in the team
@@ -114,14 +97,6 @@ public class Team {
 	 */
 	public int getPoolScore() {
 		return pool.getScore();
-	}
-	
-	/**
-	 * Inspect the last trick the team took
-	 * @return getPool().getCards();
-	 */
-	public Card[] getLastTrick() {
-		return pool.getCards();
 	}
 	
 	/**********************************************************************
