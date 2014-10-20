@@ -1,26 +1,38 @@
 package AI;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Random;
 
 import player.InformationHandle;
 import core.Card;
 import core.Suit;
 
 public class ExampleIntelligence implements Intelligence {
+	
+	private Random rand;
+	
+	public ExampleIntelligence() {
+		this.rand = new Random();
+	}
 
 	/**
-	 * Will choose the first valid card in hand.
+	 * Will choose a random card in the hand.
 	 */
 	@Override
 	public Card chooseCard(List<Card> hand, InformationHandle info) {
+		List<Card> valid = new ArrayList<Card>();
 		for ( Card card : hand ) {
 			if ( info.isValidCard(card) ) {
-				return card;
+				valid.add(card);
 			}
 		}
-		throw new RuntimeException("unexpected");
+		if ( !valid.isEmpty() ) {
+			return valid.get(rand.nextInt(valid.size()));
+		} else {
+			throw new RuntimeException("unexpected");
+		}
+		
 	}
 
 	@Override
@@ -29,24 +41,11 @@ public class ExampleIntelligence implements Intelligence {
 	}
 
 	/**
-	 * Will choose the suit associated with the cards with the highest combined
-	 * symbol strength.
+	 * Choose a random trump
 	 */
 	@Override
 	public Suit chooseTrump(List<Card> hand) {
-		Map<Suit,Double> amounts = new HashMap<Suit,Double>();
-		for ( Suit s : Suit.values()) {
-			amounts.put(s, (double) 0);
-		}
-		for ( Card c : hand ) {
-			double x = amounts.get(c.getSuit()) + c.getSymbol().getStrength();
-			amounts.put(c.getSuit(), x);
-		}
-		Suit best = Suit.HEART;
-		for ( Suit s : amounts.keySet() ) {
-			if ( amounts.get(s) > amounts.get(best)) { best = s; }
-		}
-		return best;
+		return Suit.values()[rand.nextInt(4)];
 	}
 
 	/**
