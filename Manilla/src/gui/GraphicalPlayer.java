@@ -12,7 +12,7 @@ public class GraphicalPlayer extends Player {
 	/**
 	 * between 0 and 100
 	 */
-	private static final double SPEED = 75;
+	private static final double SPEED = 50;
 
 	public GraphicalPlayer(String name, UIController uic) {
 		super(name);
@@ -111,6 +111,7 @@ public class GraphicalPlayer extends Player {
 	@Override
 	public void notifyOfTrick(Card[] trick) {
 		uic.updateField(new ArrayList<Card>(), 0);
+		uic.updateTrick(trick);
 		pauze();
 	}
 

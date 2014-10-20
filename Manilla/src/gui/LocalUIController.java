@@ -168,5 +168,18 @@ public class LocalUIController implements UIController {
 		}
 		return trump;
 	}
+	
+	/**********************************************************************
+	 * UPDATE TRICK
+	 **********************************************************************/
+
+	@Override
+	public void updateTrick(final Card[] trick) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				frame.updatePreviousTrick(trick);
+			}
+		});	
+	}
 
 }

@@ -20,6 +20,7 @@ import javax.swing.border.EtchedBorder;
 import AI.ArtificialPlayer;
 import AI.ExampleIntelligence;
 import AI.Intelligence;
+import AI.ward.Giskard;
 import core.Match;
 import exception.InvalidCardException;
 
@@ -39,7 +40,8 @@ public class MainGraphical extends JFrame {
 	
 	@SuppressWarnings("unchecked")
 	private static final Class<? extends Intelligence>[] ais = new Class[] {
-		ExampleIntelligence.class
+		ExampleIntelligence.class,
+		Giskard.class
 	};
 	
 	private JTextField namePlayer1;
