@@ -42,4 +42,6 @@ public interface UIController {
 
 	public abstract Suit fetchChosenTrump();
 
+	public abstract void updateTrick(Card[] trick);
+
 }
