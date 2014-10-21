@@ -13,8 +13,8 @@ import core.Match;
 public class AIVersusTest {
 
 	private static final int RUNS = 10000;
-	private static final Class<? extends Intelligence> teamA = Project2501.class;
-	private static final Class<? extends Intelligence> teamB = Giskard.class;
+	private static final Class<? extends Intelligence> teamA = Giskard.class;
+	private static final Class<? extends Intelligence> teamB = Project2501.class;
 	
 	@Test
 	public void test() throws Exception {
