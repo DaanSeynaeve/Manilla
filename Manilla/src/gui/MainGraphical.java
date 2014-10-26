@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -13,24 +14,21 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
+import player.Player;
 import AI.ArtificialPlayer;
 import AI.ExampleIntelligence;
 import AI.Intelligence;
-import AI.ward.Giskard;
+import AI.daan.Project2501;
+import core.FullMatch;
 import core.Logger;
-import core.Match;
+import exception.IllegalShuffleException;
 import exception.InvalidCardException;
-
-import javax.swing.JTextField;
-import javax.swing.JSeparator;
-
-import player.Player;
-
-import java.awt.Color;
 
 public class MainGraphical extends JFrame {
 
@@ -42,7 +40,8 @@ public class MainGraphical extends JFrame {
 	@SuppressWarnings("unchecked")
 	private static final Class<? extends Intelligence>[] ais = new Class[] {
 		ExampleIntelligence.class,
-		Giskard.class
+		// Giskard.class,
+		Project2501.class
 	};
 	
 	private JTextField namePlayer1;
@@ -66,6 +65,7 @@ public class MainGraphical extends JFrame {
 		Logger.setRemember(true);
 		
 		startLock = new Object();
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -79,7 +79,8 @@ public class MainGraphical extends JFrame {
 		
 		synchronized(startLock) {
 			try {
-				startLock.wait();
+				// block call until
+				startLock.wait();				
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -91,7 +92,7 @@ public class MainGraphical extends JFrame {
 			}
 		};
 		
-		t.run();
+		t.start();
 		
 	}
 
@@ -110,14 +111,15 @@ public class MainGraphical extends JFrame {
 		
 		frame.dispose();
 		
-		Player[] sequence = {p1,p3,p2,p4};
+		Player[] playOrdered = {p1,p3,p2,p4};
+		Player[] teamOrdered = {p1,p2,p3,p4};
 		for ( GraphicalPlayer p : humans ) {
-			initGUI(p,sequence);
+			initGUI(p,playOrdered);
 		}
-		Match m = new Match(p1,p2,p3,p4);
+		FullMatch m = new FullMatch(teamOrdered);
 		try {
 			m.run();
-		} catch (InvalidCardException e) {
+		} catch (InvalidCardException | IllegalShuffleException e) {
 			e.printStackTrace();
 		}
 	}

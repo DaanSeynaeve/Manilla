@@ -2,13 +2,12 @@ package core;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import player.Pool;
 
 /**
  * This class represents a deck, from which cards can be drawn.
- * A deck can be shuffled.
+ * A deck can be shuffled with a ShuffleCommand.
  * @author Daan
  */
 public class Deck {
@@ -52,8 +51,8 @@ public class Deck {
 		return cards;
 	}
 	
-	private void setCards(ArrayList<Card> top) {
-		this.cards = top;
+	private void setCards(List<Card> cards) {
+		this.cards = cards;
 	}
 	
 	public int getSize() {
@@ -72,60 +71,14 @@ public class Deck {
 	 * SHUFFLE
 	 **********************************************************************/
 	
-	/**
-	 * Shuffles the cards in the deck using randomization
-	 * Algorithm: Knuth / Fisher-Yates
-	 */
-	public void shuffle() {
-		Random random = new Random();
-		for (int i=getSize()-1 ; i>0 ; i--) {
-			swap(i, random.nextInt(i));
-		}
+	public void execute(ShuffleCommand command) {
+		command.shuffle(cards);
 	}
 	
-	private void swap(int i, int j) {
-		Card c = getCards().get(i);
-		getCards().set(i, getCards().get(j));
-		getCards().set(j, c);
-	}
-	
-	/**
-	 * Shuffles the cards <b>n</b> times using riffle shuffle
-	 */
-	public void multiRiffleShuffle(int n) {
-		for ( int i = 0 ; i < n ; i++ ) {
-			riffleShuffle();
+	public void execute(List<ShuffleCommand> commands ) {
+		for ( ShuffleCommand command : commands) {
+			execute(command);
 		}
-	}
-	
-	/**
-	 * Shuffles the cards in the deck using riffle shuffle
-	 * Algorithm: Own interpretation
-	 */
-	public void riffleShuffle() { 
-		ArrayList<Card> upper = getCards((getSize()/2)-1, getSize());
-		ArrayList<Card> lower = getCards(0, (getSize()/2)-1);
-		ArrayList<Card> deck = new ArrayList<Card>();
-		Random random = new Random();
-		for (int i=0 ; i < getSize() ; i++) {
-			boolean choice = random.nextBoolean();
-			if ( ( choice && !upper.isEmpty() ) || lower.isEmpty() ) {
-				deck.add(upper.get(0));
-				upper.remove(0);
-			} else {
-				deck.add(lower.get(0));
-				lower.remove(0);
-			}
-		}
-		this.cards = deck;
-	}
-	
-	private ArrayList<Card> getCards(int from, int to) {
-		ArrayList<Card> part = new ArrayList<Card>();
-		for ( int i = from ; i < to ; i++ ) {
-			part.add(cards.get(i));
-		}
-		return part;
 	}
 	
 	/**********************************************************************
@@ -141,8 +94,8 @@ public class Deck {
 	 * 			The amount of cards to taken from the top
 	 */
 	public void cut(int amount) {
-		ArrayList<Card> top	= getCards(getSize()-amount, getSize());
-		ArrayList<Card> bottom = getCards(0,getSize()-amount);
+		List<Card> top	= getCards().subList(getSize()-amount, getSize());
+		List<Card> bottom = getCards().subList(0,getSize()-amount);
 		top.addAll(bottom);
 		setCards(top);
 	}
@@ -156,10 +109,10 @@ public class Deck {
 	 * 			The amount of cards in the middle portion.
 	 */
 	public void scarneCut(int topAmount, int middleAmount) {
-		ArrayList<Card> top = getCards(getSize() - topAmount, getSize());
-		ArrayList<Card> middle = getCards(getSize() - topAmount - middleAmount, getSize() - topAmount);
+		List<Card> top = getCards().subList(getSize() - topAmount, getSize());
+		List<Card> middle = getCards().subList(getSize() - topAmount - middleAmount, getSize() - topAmount);
 		top.addAll(middle);
-		top.addAll(getCards(0, getSize() - topAmount - middleAmount));
+		top.addAll(getCards().subList(0, getSize() - topAmount - middleAmount));
 		setCards(top);
 	}
 

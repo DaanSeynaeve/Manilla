@@ -6,7 +6,7 @@ package core;
  */
 public enum Suit {
 	CLUB,
-	SPADE,
 	HEART,
-	DIAMOND
+	SPADE,
+	DIAMOND;
 }

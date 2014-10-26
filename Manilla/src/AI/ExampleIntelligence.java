@@ -1,11 +1,13 @@
 package AI;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 import player.InformationHandle;
 import core.Card;
+import core.ShuffleCommand;
 import core.Suit;
 
 public class ExampleIntelligence implements Intelligence {
@@ -62,6 +64,11 @@ public class ExampleIntelligence implements Intelligence {
 	@Override
 	public boolean chooseToKnock(List<Card> hand, Suit trump) {
 		return false;
+	}
+	
+	@Override
+	public List<ShuffleCommand> chooseShuffleCommands() {
+		return Arrays.asList(ShuffleCommand.createRandomShuffleCommand());
 	}
 	
 }

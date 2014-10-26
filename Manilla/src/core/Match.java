@@ -1,5 +1,6 @@
 package core;
 
+import exception.IllegalShuffleException;
 import exception.InvalidCardException;
 import player.Player;
 import player.Team;
@@ -23,7 +24,7 @@ public class Match {
 		this.p4 = p4;
 	}
 
-	public void run() throws InvalidCardException {
+	public void run() throws InvalidCardException, IllegalShuffleException {
 		
 		Logger.log("========== PLAYERS ==========");
 		Logger.log(p1 + " : " + p1.identify());
@@ -39,8 +40,8 @@ public class Match {
 		Logger.log("Team 2: " + p3 + ", " + p4);
 		
 		Deck deck = new Deck();
-		deck.shuffle();
-		Round r1 = new Round(t1,t2,p1,deck);
+		deck.execute(ShuffleCommand.createRandomShuffleCommand());
+		Round r1 = new Round(t1,t2,p1,deck,1);
 		
 		// score calculation
 		r1.run();

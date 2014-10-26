@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import core.Card;
 import core.Deck;
+import core.ShuffleCommand;
 
 public class DeckTest {
 
@@ -21,7 +22,7 @@ public class DeckTest {
 		
 		for ( int x = 0 ; x < runs ; x++) {
 			Deck d = new Deck();
-			d.multiRiffleShuffle(7);
+			d.execute(ShuffleCommand.createMultiRiffleShuffle(7));
 			// according to literature 7 riffle shuffles is enough to produce a random result
 			// d.multiRiffleShuffle(7);
 			// d.shuffle();

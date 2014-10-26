@@ -4,6 +4,7 @@ import java.util.List;
 
 import player.InformationHandle;
 import core.Card;
+import core.ShuffleCommand;
 import core.Suit;
 
 /**
@@ -59,5 +60,20 @@ public interface Intelligence {
 	 * @return		True if the Intelligence decides to knock
 	 */
 	public boolean chooseToKnock(List<Card> hand, Suit trump);
+
+	/***
+	 * Decide how the deck should be shuffled. Returns ShuffleCommands,
+	 * which can be created using the static factory methods of ShuffleCommand.
+	 * <br/><br/>
+	 * System usage: the system calls this method on the dealer
+	 * to obtain instructions on how to shuffle the deck. Each command has a number of points.
+	 * The sum of the points of the commands in the returned list should be at least 6,
+	 * otherwise an exception will be thrown by the system. The commands will be executed
+	 * in the same order as they appear in the list.
+	 * 
+	 * @return List of ShuffleCommands
+	 * @see	ShuffleCommand
+	 */
+	public List<ShuffleCommand> chooseShuffleCommands();
 
 }

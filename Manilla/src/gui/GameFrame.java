@@ -1,15 +1,25 @@
 package gui;
 
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,25 +28,25 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 
 import core.Card;
 import core.Suit;
 
-import javax.swing.SwingConstants;
-import javax.swing.JButton;
-
 public class GameFrame extends JFrame {
 
 	private static final long serialVersionUID = -2612918951205849060L;
-
-	private JPanel contentPane;
 	
 	private final int CARD_WIDTH = 71;
 	private final int CARD_HEIGHT = 96;
@@ -48,24 +58,80 @@ public class GameFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public GameFrame() {
-		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 778, 518);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
 		loadImages();
-
 		handMap = new HashMap<>();
 		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 816, 548);
+		setMinimumSize(new Dimension(816, 548));
+		
+		JPanel contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
+		setContentPane(contentPane);
+		contentPane.setLayout(new BorderLayout(0, 0));
+		
+		JPanel center = new JPanel() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void paintComponent(Graphics g)
+			{
+				super.paintComponent(g);
+				g.drawImage(feltBack, 0, 0, getWidth(), getHeight(), null);
+			}
+		};
+		center.setBackground(new Color(0, 128, 0));
+		contentPane.add(center, BorderLayout.CENTER);
+		center.setLayout(new GridBagLayout());
+		
+		JPanel east = new JPanel();
+		contentPane.add(east, BorderLayout.EAST);
+		east.setLayout(new GridBagLayout());
+		
+		//----------------------------------------
+		
 		JPanel left = new JPanel();
-		left.setBorder(null);
-		left.setBackground(new Color(0, 128, 0));
-		left.setBounds(0, 26, 659, 464);
-		contentPane.add(left);
+		left.setOpaque(false);
+		left.setBounds(0, 26, 656, 484);
+		left.setPreferredSize(new Dimension(656,484));
+		center.add(left);
 		left.setLayout(null);
+		
+		//----------------------------------------
+		
+		JPanel right = new JPanel();
+		right.setPreferredSize(new Dimension(144,484));
+		GridBagConstraints gbc_right = new GridBagConstraints();
+		gbc_right.weighty = 1.0;
+		gbc_right.anchor = GridBagConstraints.NORTH;
+		east.add(right, gbc_right);
+		right.setLayout(null);
+		
+		/**********************************************************************
+		 * MENU BAR
+		 **********************************************************************/
+		
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setPreferredSize(new Dimension(800,26));
+		contentPane.add(menuBar, BorderLayout.NORTH);
+		
+		JMenu settingsMenu = new JMenu("Settings");
+		menuBar.add(settingsMenu);
+		
+		JCheckBoxMenuItem chckbxFullscreen = new JCheckBoxMenuItem("FullScreen");
+		settingsMenu.add(chckbxFullscreen);
+		chckbxFullscreen.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if ( e.getStateChange() == ItemEvent.SELECTED ) {
+					(GameFrame.this).setExtendedState(Frame.MAXIMIZED_BOTH); 
+				} else {
+					(GameFrame.this).setBounds(100, 100, 816, 548);
+				}
+			}
+			
+		});
 		
 		/**********************************************************************
 		 * FIELD PANEL
@@ -80,19 +146,19 @@ public class GameFrame extends JFrame {
 		EmptyBorder padding = new EmptyBorder(BOX_SPACING,BOX_SPACING,BOX_SPACING,BOX_SPACING);
 		topField = Box.createHorizontalBox();
 		topField.setBounds(109, 10, CARD_WIDTH + (BOX_SPACING+BORDER_WIDTH)*2, CARD_HEIGHT + (BOX_SPACING+BORDER_WIDTH)*2);
-		topField.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(0, 96, 0), BORDER_WIDTH), padding));
+		topField.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(0, 96, 32), BORDER_WIDTH), padding));
 		
 		leftField = Box.createHorizontalBox();
 		leftField.setBounds(24, 68, CARD_WIDTH + (BOX_SPACING+BORDER_WIDTH)*2, CARD_HEIGHT + (BOX_SPACING+BORDER_WIDTH)*2);
-		leftField.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(0, 96, 0), BORDER_WIDTH), padding));
+		leftField.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(0, 96, 32), BORDER_WIDTH), padding));
 		
 		rightField = Box.createHorizontalBox();
 		rightField.setBounds(194, 68, CARD_WIDTH + (BOX_SPACING+BORDER_WIDTH)*2, CARD_HEIGHT + (BOX_SPACING+BORDER_WIDTH)*2);
-		rightField.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(0, 96, 0), BORDER_WIDTH), padding));
+		rightField.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(0, 96, 32), BORDER_WIDTH), padding));
 		
 		bottomField = Box.createHorizontalBox();
 		bottomField.setBounds(109, 120, CARD_WIDTH + (BOX_SPACING+BORDER_WIDTH)*2, CARD_HEIGHT + (BOX_SPACING+BORDER_WIDTH)*2);
-		bottomField.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(0, 96, 0), BORDER_WIDTH), padding));
+		bottomField.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(0, 96, 32), BORDER_WIDTH), padding));
 		
 		fieldPanel.add(leftField);
 		fieldPanel.add(rightField);
@@ -133,7 +199,7 @@ public class GameFrame extends JFrame {
 		
 		handPanel = new JPanel();
 		handPanel.setOpaque(false);
-		handPanel.setBounds(10, 345, 639, 108);
+		handPanel.setBounds(8, 365, 639, 108);
 		handPanel.setLayout(null);
 		left.add(handPanel);
 		
@@ -141,35 +207,21 @@ public class GameFrame extends JFrame {
 		 * ...
 		 **********************************************************************/
 		
-		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(0, 0, 772, 26);
-		contentPane.add(menuBar);
-		
-		// JMenu mnGame = new JMenu("Game");
-		// menuBar.add(mnGame);
-		
-		// JMenuItem mntmSettings = new JMenuItem("Settings");
-		// mnGame.add(mntmSettings);
-		
-		JPanel right = new JPanel();
-		right.setBounds(658, 26, 114, 464);
-		contentPane.add(right);
-		right.setLayout(null);
-		
-		JLabel lblTrump = new JLabel("Trump:");
-		lblTrump.setBounds(33, 11, 46, 17);
+		JLabel lblTrump = new JLabel("Trump:",JLabel.CENTER);
+		lblTrump.setForeground(Color.DARK_GRAY);
+		lblTrump.setBounds(9, 11, 125, 17);
 		lblTrump.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		right.add(lblTrump);
 		
 		trumpPanel = new JPanel();
-		trumpPanel.setBorder(new LineBorder(Color.GRAY));
+		trumpPanel.setBorder(new LineBorder(new Color(128, 128, 128)));
 		trumpPanel.setLayout(new GridBagLayout());
-		trumpPanel.setBounds(9, 30, 96, 96);
+		trumpPanel.setBounds(9, 30, 125, 88);
 		right.add(trumpPanel);
 		
-		btnPreviousTrick = new JButton("<html><center>Previous<br/>Trick</center></html>");
+		btnPreviousTrick = new JButton("<html><center>Previous Trick</center></html>");
 		btnPreviousTrick.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnPreviousTrick.setBounds(9, 137, 95, 43);
+		btnPreviousTrick.setBounds(9, 388, 125, 37);
 		btnPreviousTrick.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -179,6 +231,108 @@ public class GameFrame extends JFrame {
 		btnPreviousTrick.setEnabled(false);
 		
 		right.add(btnPreviousTrick);
+		
+		JLabel lblMultText = new JLabel("Multiplier:",JLabel.CENTER);
+		lblMultText.setForeground(Color.DARK_GRAY);
+		lblMultText.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblMultText.setBounds(9, 158, 125, 17);
+		right.add(lblMultText);
+		
+		JPanel multPanel = new JPanel();
+		multPanel.setForeground(Color.GRAY);
+		multPanel.setBorder(new LineBorder(Color.GRAY));
+		multPanel.setBounds(9, 177, 125, 37);
+		right.add(multPanel);
+		multPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		lblMultNumber = new JLabel("x1");
+		lblMultNumber.setForeground(Color.GRAY);
+		lblMultNumber.setFont(new Font("Tahoma", Font.BOLD, 20));
+		multPanel.add(lblMultNumber);
+		
+		dealerPanel = new JPanel();
+		dealerPanel.setForeground(Color.GRAY);
+		dealerPanel.setBorder(new LineBorder(new Color(128, 128, 128)));
+		dealerPanel.setBounds(9, 115, 125, 32);
+		right.add(dealerPanel);
+		dealerPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		lblDealer = new JLabel("Freddy");
+		lblDealer.setForeground(Color.GRAY);
+		lblDealer.setFont(new Font("Tahoma", Font.BOLD, 18));
+		dealerPanel.add(lblDealer);
+		
+		JButton undoButton = new JButton("<html><center>Undo</center></html>");
+		undoButton.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		undoButton.setBounds(9, 436, 125, 37);
+		undoButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				JOptionPane.showMessageDialog(GameFrame.this,
+						"Sorry, the table is sticky.",
+						"Undo",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+			
+		});
+		right.add(undoButton);
+		
+		JLabel lblPoolScores = new JLabel("Pool scores:", SwingConstants.CENTER);
+		lblPoolScores.setForeground(Color.DARK_GRAY);
+		lblPoolScores.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblPoolScores.setBounds(9, 225, 125, 17);
+		right.add(lblPoolScores);
+		
+		JPanel poolScorePanelAlly = new JPanel();
+		poolScorePanelAlly.setBorder(new TitledBorder(new LineBorder(new Color(128, 128, 128)), "Ally", TitledBorder.CENTER, TitledBorder.BOTTOM, null, Color.DARK_GRAY));
+		poolScorePanelAlly.setBounds(9, 244, 61, 50);
+		right.add(poolScorePanelAlly);
+		poolScorePanelAlly.setLayout(new CardLayout(0, 0));
+		
+		JPanel poolScorePanelEnemy = new JPanel();
+		poolScorePanelEnemy.setBorder(new TitledBorder(new LineBorder(new Color(128, 128, 128)), "Enemy", TitledBorder.CENTER, TitledBorder.BOTTOM, null, Color.DARK_GRAY));
+		poolScorePanelEnemy.setBounds(73, 244, 61, 50);
+		right.add(poolScorePanelEnemy);
+		poolScorePanelEnemy.setLayout(new CardLayout(0, 0));
+		
+		lblEnemyPoolScore = new JLabel("0",JLabel.CENTER);
+		lblEnemyPoolScore.setForeground(Color.GRAY);
+		lblEnemyPoolScore.setFont(new Font("Tahoma", Font.BOLD, 18));
+		poolScorePanelEnemy.add(lblEnemyPoolScore, "name_28394980645032");
+		
+		lblAllyPoolScore = new JLabel("0",JLabel.CENTER);
+		lblAllyPoolScore.setForeground(Color.GRAY);
+		lblAllyPoolScore.setFont(new Font("Tahoma", Font.BOLD, 18));
+		poolScorePanelAlly.add(lblAllyPoolScore, "name_28357213157586");
+		
+		JLabel lblTotalScores = new JLabel("Total scores:", SwingConstants.CENTER);
+		lblTotalScores.setForeground(Color.DARK_GRAY);
+		lblTotalScores.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblTotalScores.setBounds(9, 299, 125, 17);
+		right.add(lblTotalScores);
+		
+		JPanel totalScorePanelAlly = new JPanel();
+		totalScorePanelAlly.setBorder(new TitledBorder(new LineBorder(new Color(128, 128, 128)), "Ally", TitledBorder.CENTER, TitledBorder.BOTTOM, null, Color.DARK_GRAY));
+		totalScorePanelAlly.setBounds(9, 317, 61, 50);
+		right.add(totalScorePanelAlly);
+		totalScorePanelAlly.setLayout(new CardLayout(0, 0));
+		
+		JPanel totalScorePanelEnemy = new JPanel();
+		totalScorePanelEnemy.setBorder(new TitledBorder(new LineBorder(new Color(128, 128, 128)), "Enemy", TitledBorder.CENTER, TitledBorder.BOTTOM, null, Color.DARK_GRAY));
+		totalScorePanelEnemy.setBounds(73, 317, 61, 50);
+		right.add(totalScorePanelEnemy);
+		totalScorePanelEnemy.setLayout(new CardLayout(0, 0));
+		
+		lblAllyTotalScore = new JLabel("0", SwingConstants.CENTER);
+		lblAllyTotalScore.setForeground(Color.GRAY);
+		lblAllyTotalScore.setFont(new Font("Tahoma", Font.BOLD, 18));
+		totalScorePanelAlly.add(lblAllyTotalScore, "name_29314576817384");
+		
+		lblEnemyTotalScore = new JLabel("0", SwingConstants.CENTER);
+		lblEnemyTotalScore.setForeground(Color.GRAY);
+		lblEnemyTotalScore.setFont(new Font("Tahoma", Font.BOLD, 18));
+		totalScorePanelEnemy.add(lblEnemyTotalScore, "name_29401204335232");
 	}
 	
 	/**********************************************************************
@@ -206,7 +360,8 @@ public class GameFrame extends JFrame {
 	private static final int HAND_X_OFFSET = 18;
 	private static final int HAND_Y_OFFSET = 4;
 	private static final int SELECTION_THICKNESS = 2;
-	private static final Color SELECTION_COLOR = Color.WHITE;
+	private static final Color SELECTION_VALID = new Color(50, 255, 50);
+	private static final Color SELECTION_INVALID = new Color(255, 50, 50);
 	
 	public void activateHand() {
 		synchronized(handActiveLock) {
@@ -220,7 +375,17 @@ public class GameFrame extends JFrame {
 		}
 	}
 	
-	public void updateHand(List<Card> hand) {
+	public void updateHand(List<Card> hand, final List<Card> valid) {
+		Collections.sort(hand, new Comparator<Card>() {
+			@Override
+			public int compare(Card c1, Card c2) {
+				if (c1.getSuit().equals(c2.getSuit())) {
+					return c1.compareTo(c2);
+				} else {
+					return c1.getSuit().compareTo(c2.getSuit());
+				}
+			}
+		});
 		clearSelectedCard();
 		handMap.clear();
 		handPanel.removeAll();
@@ -238,7 +403,8 @@ public class GameFrame extends JFrame {
 						if ( handActive ) {
 							selected = ((JLabel) e.getSource());
 							unborderAllHandCards();
-							selected.setBorder(BorderFactory.createLineBorder(SELECTION_COLOR,SELECTION_THICKNESS));
+							Color selectionColor = (valid.contains(handMap.get(selected))) ? SELECTION_VALID : SELECTION_INVALID;
+							selected.setBorder(BorderFactory.createLineBorder(selectionColor,SELECTION_THICKNESS));
 						}
 					}
 				}
@@ -322,15 +488,67 @@ public class GameFrame extends JFrame {
 	}
 	
 	/**********************************************************************
-	 * TRUMP
+	 * TRUMP, DEALER & MULTIPLIER
 	 **********************************************************************/
 	
 	private JPanel trumpPanel;
+	private JLabel lblMultNumber;
+	private JPanel dealerPanel;
+	private JLabel lblDealer;
 	
 	public void updateTrump(Suit trump) {
 		trumpPanel.removeAll();
-		trumpPanel.add(new JLabel(getSuitImage(trump),JLabel.CENTER));
+		if ( trump != null ) {
+			trumpPanel.add(new JLabel(getSuitImage(trump),JLabel.CENTER));
+		} else {
+			JLabel x = new JLabel("X",JLabel.CENTER);
+			x.setFont(new Font("Tahoma",Font.BOLD,40));
+			x.setForeground(Color.GRAY);
+			trumpPanel.add(x);
+		}
 		trumpPanel.revalidate();
+		trumpPanel.repaint();
+	}
+	
+	public void clearTrump() {
+		trumpPanel.removeAll();
+		trumpPanel.revalidate();
+		trumpPanel.repaint();
+	}
+	
+	public void updateDealerName(String dealerName) {
+		lblDealer.setText(dealerName);
+		lblDealer.revalidate();
+	}
+	
+	public void updateMultiplier(int multiplier) {
+		lblMultNumber.setText("x" + multiplier);
+		lblDealer.revalidate();
+	}
+	
+	/**********************************************************************
+	 * SCORES
+	 **********************************************************************/
+	
+	private JLabel lblEnemyPoolScore;
+	private JLabel lblAllyPoolScore;
+	private JLabel lblEnemyTotalScore;
+	private JLabel lblAllyTotalScore;
+	
+	public void updatePoolScores(int ally, int enemy) {
+		lblAllyPoolScore.setText(Integer.toString(ally));
+		lblAllyPoolScore.setForeground(ally > 30 ? new Color(50, 205, 50) : Color.GRAY);
+		lblEnemyPoolScore.setText(Integer.toString(enemy));
+		lblEnemyPoolScore.setForeground(enemy > 30 ? Color.RED: Color.GRAY);
+		lblAllyPoolScore.revalidate();
+		lblEnemyPoolScore.revalidate();
+	}
+	
+	public void updateTotalScores(int ally, int enemy) {
+		lblEnemyTotalScore.setText(Integer.toString(enemy));
+		lblAllyTotalScore.setText(Integer.toString(ally));
+		lblEnemyTotalScore.revalidate();
+		lblAllyTotalScore.revalidate();
 	}
 	
 	/**********************************************************************
@@ -379,11 +597,14 @@ public class GameFrame extends JFrame {
 	
 	private BufferedImage allCards;
 	private BufferedImage allSuits;
+	private BufferedImage feltBack;
 	
 	private void loadImages() {
+		ClassLoader cl = this.getClass().getClassLoader();
 		try {
-			allCards = ImageIO.read(new File("img/allCards.jpg"));
-			allSuits = ImageIO.read(new File("img/allSuits100.png"));
+			allCards = ImageIO.read(cl.getResource("resource/allCards.jpg"));
+			allSuits = ImageIO.read(cl.getResource("resource/allSuits100.png"));
+			feltBack = ImageIO.read(cl.getResource("resource/felt.png"));
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}

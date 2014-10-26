@@ -6,6 +6,7 @@ import java.util.List;
 import player.InformationHandle;
 import player.Player;
 import player.Team;
+import exception.IllegalShuffleException;
 import exception.InvalidCardException;
 
 
@@ -26,14 +27,15 @@ public class Round {
 	Card[] previousTrick;
 	int multiplier;
 	Deck deck;
+	private static final int MIN_COMMAND_POINTS = 6;
 	
-	public Round(Team team1, Team team2, Player dealer, Deck deck) {
+	public Round(Team team1, Team team2, Player dealer, Deck deck, int multiplier) {
 		this.team1 = team1;
 		this.team2 = team2;
 		this.dealer = dealer;
 		this.field = new ArrayList<Card>();
 		this.sequence = new Player[4];
-		this.multiplier = 1;
+		this.multiplier = multiplier;
 		this.previousTrick = null;
 		this.deck = deck;
 	}
@@ -47,15 +49,31 @@ public class Round {
 	}
 	
 	/**********************************************************************
+	 * TRUMP
+	 **********************************************************************/
+	
+	/**
+	 * Returns the trump suit when one was declared.
+	 * Returns null if:<br/>
+	 * 1) no trump suit was declared yet.
+	 * 2) the round is no-trump
+	 * @return a Suit, or null
+	 */
+	public Suit getTrump() {
+		return trump;
+	}
+	
+	
+	/**********************************************************************
 	 * RUN
 	 **********************************************************************/
 	
 	/**
 	 * Executes a sequence of 8 tricks and returns the winning team
-
+	 * @throws IllegalShuffleException 
 	 * @throws InvalidCardException 
 	 */
-	public void run() throws InvalidCardException {
+	public void run() throws IllegalShuffleException, InvalidCardException {
 		// STEP 1: BUILD PLAYER SEQUENCE
 		Player starter = getSuccessor(dealer);
 		buildSequence(starter);
@@ -66,10 +84,16 @@ public class Round {
 			Logger.log(player);
 		}
 		
-		// STEP 2: DEAL CARDS
+		// STEP 2: SHUFFLE & DEAL CARDS
+		List<ShuffleCommand> commands = dealer.chooseShuffleCommands();
+		if ( legalShuffleCommands(commands)) {
+			deck.execute(commands);
+		} else {
+			throw new IllegalShuffleException();
+		}
 		deal323(deck);
 		for ( Player player : sequence ) {
-			player.notifyOfNewRound();
+			player.notifyOfNewRound(dealer.getName());
 		}
 		
 		// STEP 2.2: EXAMINE HANDS
@@ -84,8 +108,18 @@ public class Round {
 		
 		// STEP 3: DEFINE TRUMP & KNOCKING
 		trump = dealer.chooseTrump();
-		if (starter.knocks(trump) || getTeamPlayer(starter).knocks(trump)) {
+		if (trump == null) {
 			multiplier *= 2;
+		}
+		if (starter.knocks(trump)) {
+			Logger.log(starter.getName() + " knocked");
+			multiplier *= 2;
+		} else if ( getTeamPlayer(starter).knocks(trump) ) {
+			Logger.log(getTeam(starter) + " knocked.");
+			multiplier *= 2;
+		}
+		for ( Player player : sequence ) {
+			player.notifyOfMultiplier(trump, multiplier);
 		}
 		
 		// STEP 3.2: EXAMINE THE TRUMP
@@ -125,6 +159,14 @@ public class Round {
 		}
 	}
 	
+	private boolean legalShuffleCommands(List<ShuffleCommand> commands) {
+		int points = 0;
+		for ( ShuffleCommand command : commands ) {
+			points += command.getPoints();
+		}
+		return (points >= MIN_COMMAND_POINTS);
+	}
+
 	private void storeTrick() {
 		previousTrick = new Card[4];
 		for ( int i = 0 ; i < 4 ; i++ ) {
@@ -132,7 +174,7 @@ public class Round {
 		}
 		field.clear();
 		for ( Player p : sequence ) {
-			p.notifyOfTrick(previousTrick);
+			p.notifyOfTrick(previousTrick, new InformationHandle(p,this));
 		}
 	}
 
@@ -143,6 +185,7 @@ public class Round {
 	/**
 	 * Checks if the given card is valid to play at this time
 	 * by the given player.
+	 * This check can still be used if <i>this.trum == null</i>
 	 * @param card
 	 * @param player
 	 * @return true if it is
@@ -294,13 +337,24 @@ public class Round {
 	 **********************************************************************/
 	
 	/**
-	 * Returns the team of the given player
+	 * Returns the team of the given player (the ally team)
 	 */
-	private Team getTeam(Player player) {
+	public Team getTeam(Player player) {
 		if ( team1.hasPlayer(player)) {
 			return team1;
 		} else {
 			return team2;
+		}
+	}
+	
+	/**
+	 * Returns the team opposing the given player (the enemy team)
+	 */
+	public Team getOpposingTeam(Player player) {
+		if ( team1.hasPlayer(player)) {
+			return team2;
+		} else {
+			return team1;
 		}
 	}
 	
@@ -349,16 +403,6 @@ public class Round {
 			player.getHand().addCard(deck.draw());
 		}
 	}
-
-
-	/**
-	 * Returns the trump suit, or null when no trump
-	 * was declared yet
-	 * @return a Suit, or null
-	 */
-	public Suit getTrump() {
-		return trump;
-	}
 	
 	/**
 	 * Return the suit of the first card in this trick.
@@ -384,5 +428,11 @@ public class Round {
 	public Card[] getPreviousTrickClone() {
 		return previousTrick.clone();
 	}
+	
+
+	public Player getDealer() {
+		return this.dealer;
+	}
+
 	
 }

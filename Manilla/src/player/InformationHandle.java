@@ -56,6 +56,7 @@ public class InformationHandle {
 	
 	/**
 	 * Inspects the current trump.
+	 * When the round is no-trump, null is returned.
 	 * @return a Suit
 	 */
 	public Suit inspectTrump() {
@@ -78,6 +79,33 @@ public class InformationHandle {
 	 */
 	public int getTurn() {
 		return round.getPositionInSequence(player);
+	}
+	
+	/**
+	 * Returns the dealers position in the current trick's order of play.
+	 * This is a number ranging from 0 (dealer was first to play a card) to 3 (dealer is last to play a card)
+	 * @return position (int)
+	 */
+	public int getDealerTurn() {
+		return round.getPositionInSequence(round.getDealer());
+	}
+	
+	/**
+	 * Returns the current pool score for the allied team. This is the
+	 * sum of the values of the cards in the tricks the allied team has won.
+	 * @return integer
+	 */
+	public int getCurrentAllyPoolScore() {
+		return round.getTeam(player).getPoolScore();
+	}
+	
+	/**
+	 * Return the current pool score for the enemy team. This is the
+	 * sum of the values of the cards in the tricks the enemy team has won.
+	 * @return integer
+	 */
+	public int getCurrentEnemyPoolScore() {
+		return round.getOpposingTeam(player).getPoolScore();
 	}
 
 }

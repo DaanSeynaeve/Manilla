@@ -1,19 +1,16 @@
 package gui;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import player.InformationHandle;
 import player.Player;
 import core.Card;
 import core.Logger;
+import core.ShuffleCommand;
 import core.Suit;
 
 public class GraphicalPlayer extends Player {
-	
-	/**
-	 * between 0 and 100
-	 */
-	private static final double SPEED = 50;
 
 	public GraphicalPlayer(String name, UIController uic) {
 		super(name);
@@ -51,7 +48,7 @@ public class GraphicalPlayer extends Player {
 
 	@Override
 	public Suit chooseTrump() {
-		uic.updateHand(getHand().getAsList());
+		uic.updateHand(getHand().getAsList(), null);
 		Suit trump = uic.fetchChosenTrump();
 		uic.updateTrump(trump);
 		Logger.log(":- GUI: Chose Trump");
@@ -60,13 +57,16 @@ public class GraphicalPlayer extends Player {
 
 	@Override
 	public boolean knocks(Suit trump) {
+		if ( trump == null ) {
+			uic.updateMultiplier(2);
+		}
 		uic.updateTrump(trump);
-		return false; //TODO
+		return uic.fetchKnockChoice(trump);
 	}
 
 	@Override
 	public Card chooseCard(InformationHandle info) {
-		uic.updateHand(getHand().getAsList());
+		uic.updateHand(getHand().getAsList(), getValidCards(info));
 		uic.updateField(info.inspectField(),info.getTurn());
 		
 		Card chosen;
@@ -88,21 +88,25 @@ public class GraphicalPlayer extends Player {
 		}
 	}
 
+	private List<Card> getValidCards(InformationHandle info) {
+		List<Card> valid = new ArrayList<Card>();
+		for ( Card card : getHand() ) {
+			if (info.isValidCard(card)) {
+				valid.add(card);
+			}
+		}
+		return valid;
+	}
+
 	@Override
 	public void notify(InformationHandle info) {
 		uic.updateTrump(info.inspectTrump());
-		uic.updateHand(getHand().getAsList());
+		uic.updateHand(getHand().getAsList(), null);
 		uic.updateField(info.inspectField(),info.getTurn());
-		pauze();
+		uic.pauze();
 	}
 	
-	private void pauze() {
-		try {
-			Thread.sleep((int) Math.floor((1-(SPEED/100))*1000));
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+
 
 	@Override
 	public String identify() {
@@ -110,21 +114,39 @@ public class GraphicalPlayer extends Player {
 	}
 
 	@Override
-	public void notifyOfTrick(Card[] trick) {
+	public void notifyOfTrick(Card[] trick, InformationHandle info) {
 		uic.updateField(new ArrayList<Card>(), 0);
 		uic.updateTrick(trick);
-		pauze();
+		uic.updatePoolScores(info.getCurrentAllyPoolScore(),info.getCurrentEnemyPoolScore());
+		uic.pauze();
 	}
 
 	@Override
 	public void notifyOfRoundScore(int ally, int enemy, int allyTotal,int enemyTotal) {
+		uic.updateTotalScores(allyTotal, enemyTotal);
 		uic.informOfRoundScore(ally, enemy, allyTotal, enemyTotal);
 	}
 
 	@Override
-	public void notifyOfNewRound() {
-		uic.updateHand(getHand().getAsList());
-		pauze();
+	public void notifyOfNewRound(String dealerName) {
+		uic.updateHand(getHand().getAsList(), null);
+		uic.setDealerName(dealerName);
+		uic.updatePoolScores(0, 0);
+		uic.pauze();
+	}
+
+	@Override
+	public void notifyOfMultiplier(Suit trump, int multiplier) {
+		uic.updateTrump(trump);
+		uic.updateMultiplier(multiplier);
+	}
+
+	@Override
+	public List<ShuffleCommand> chooseShuffleCommands() {
+		// TODO
+		List<ShuffleCommand> commands = new ArrayList<>();
+		commands.add(ShuffleCommand.createRandomShuffleCommand());
+		return commands;
 	}
 
 }

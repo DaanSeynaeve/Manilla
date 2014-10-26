@@ -6,6 +6,7 @@ import java.util.List;
 import player.InformationHandle;
 import player.Player;
 import core.Card;
+import core.ShuffleCommand;
 import core.Suit;
 
 public class ArtificialPlayer extends Player {
@@ -71,18 +72,30 @@ public class ArtificialPlayer extends Player {
 	}
 
 	@Override
-	public void notifyOfTrick(Card[] trick) {
-		// TODO necessary for artificial players?
-	}
-
-	@Override
 	public void notifyOfRoundScore(int ally, int enemy, int allyTotal, int enemyTotal) {
 		// TODO necessary for artificial players?
 	}
 
 	@Override
-	public void notifyOfNewRound() {
-		// TODO necessary for artificial players?
+	public void notifyOfNewRound(String dealerName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void notifyOfMultiplier(Suit trump, int multiplier) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void notifyOfTrick(Card[] trick, InformationHandle info) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<ShuffleCommand> chooseShuffleCommands() {
+		return intelligence.chooseShuffleCommands();
 	}
 	
 }

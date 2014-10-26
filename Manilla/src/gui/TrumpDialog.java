@@ -1,25 +1,23 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
 
 import core.Suit;
-
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Simple dialog to ask the user to choose a trump suit.
@@ -56,14 +54,14 @@ public class TrumpDialog extends JDialog {
 		initializeImages();
 		this.setTitle("Trump choice");
 		JPanel contentPanel = new JPanel();
-		setBounds(100, 100, 216, 256);
+		setBounds(100, 100, 216, 303);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(0, 30, 210, 190);
+		panel.setBounds(0, 30, 210, 244);
 		contentPanel.add(panel);
 		panel.setLayout(null);
 		
@@ -115,6 +113,18 @@ public class TrumpDialog extends JDialog {
 		});
 		panel.add(diamondButton);
 		
+		JButton notrumpButton = new JButton("no-trump");
+		notrumpButton.setFont(new Font("Tahoma", Font.BOLD, 14));
+		notrumpButton.setBounds(20, 191, 170, 40);
+		notrumpButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				trump = null;
+				submitChoice();
+			}
+		});
+		panel.add(notrumpButton);
+		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(0, 0, 210, 30);
 		contentPanel.add(panel_1);
@@ -131,7 +141,7 @@ public class TrumpDialog extends JDialog {
 	
 	private void initializeImages() {
 		try {
-			allSuits = ImageIO.read(new File("img/allSuits100.png"));
+			allSuits = ImageIO.read(getClass().getClassLoader().getResource("resource/allSuits100.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -153,5 +163,4 @@ public class TrumpDialog extends JDialog {
 		}
 		return null;
 	}
-
 }

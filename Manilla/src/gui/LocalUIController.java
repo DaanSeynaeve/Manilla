@@ -33,10 +33,10 @@ public class LocalUIController implements UIController {
 	 **********************************************************************/
 	
 	@Override
-	public void updateHand(final List<Card> hand) {
+	public void updateHand(final List<Card> hand, final List<Card> valid) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				frame.updateHand(hand);
+				frame.updateHand(hand, valid);
 			}
 		});
 	}
@@ -100,7 +100,10 @@ public class LocalUIController implements UIController {
 	public void informOfInvalidCardChoice() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				JOptionPane.showMessageDialog(frame, "Invalid Card! Please choose again.","Invalid Card",JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(frame,
+						"Invalid Card! Please choose again.",
+						"Invalid Card",
+						JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		
@@ -112,18 +115,23 @@ public class LocalUIController implements UIController {
 	
 	@Override
 	public void informOfRoundScore(final int ally,final int enemy, final int allyTotal, final int enemyTotal) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				String message = "The round has ended.\n"
-						+ "Scores:\n"
-						+ "- your team: " + ally + "\n"
-						+ "- enemy team: " + enemy + "\n"
-						+ "Total scores:\n"
-						+ "- your team: " + allyTotal + "\n"
-						+ "- enemy team: " + enemyTotal;
-				JOptionPane.showMessageDialog(frame, message,"Round ended",JOptionPane.INFORMATION_MESSAGE);
-			}
-		});
+		try {
+			EventQueue.invokeAndWait(new Runnable() {
+				public void run() {
+					String message = "The round has ended.\n"
+							+ "Scores:\n"
+							+ "- your team: " + ally + "\n"
+							+ "- enemy team: " + enemy + "\n"
+							+ "Total scores:\n"
+							+ "- your team: " + allyTotal + "\n"
+							+ "- enemy team: " + enemyTotal;
+					JOptionPane.showMessageDialog(frame, message,"Round ended",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**********************************************************************
@@ -131,10 +139,21 @@ public class LocalUIController implements UIController {
 	 **********************************************************************/
 	
 	@Override
-	public void setNames(final String playerName, final String other1, final String other2, final String other3) {
+	public void setNames(final String playerName, final String other1, 
+			final String other2, final String other3) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				frame.updateNames(playerName, other1, other2, other3);
+			}
+		});
+	}
+	
+	@Override
+	public void setDealerName(final String dealerName) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				frame.clearTrump();
+				frame.updateDealerName(dealerName);
 			}
 		});
 	}
@@ -180,6 +199,77 @@ public class LocalUIController implements UIController {
 				frame.updatePreviousTrick(trick);
 			}
 		});	
+	}
+	
+	/**********************************************************************
+	 * PAUZE
+	 **********************************************************************/
+	
+	private int speed = 80;
+	
+	@Override
+	public void pauze() {
+		int milis = (int) Math.floor((1-(speed/100))*1000);
+		try {
+			Thread.sleep(milis);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void updateMultiplier(final int multiplier) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				frame.updateMultiplier(multiplier);
+			}
+		});
+		
+	}
+
+	boolean knock = false;
+	
+	@Override
+	public boolean fetchKnockChoice(final Suit trump) {
+		try {
+			EventQueue.invokeAndWait(new Runnable() {
+				public void run() {
+					String situation = "Enemy ";
+					if ( trump == null ) {
+						situation += "chose to play without trump";
+					} else {
+						situation += "made the trump " + trump.toString();
+					}
+					int n = JOptionPane.showConfirmDialog(
+						    frame,
+						    situation + ".\nWould you like to knock?",
+						    "Knocking",
+						    JOptionPane.YES_NO_OPTION);
+					knock = (n == JOptionPane.YES_OPTION);
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+		}
+		return knock;
+	}
+
+	@Override
+	public void updatePoolScores(final int ally, final int enemy) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				frame.updatePoolScores(ally, enemy);
+			}
+		});
+	}
+	
+	@Override
+	public void updateTotalScores(final int ally, final int enemy) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				frame.updateTotalScores(ally, enemy);
+			}
+		});
 	}
 
 }
