@@ -1,5 +1,3 @@
-## README ##
-
 ### Schrijven van een custom AI-speler # ##
 
 Je mag zoveel klassen maken als je wilt op voorwaarde dat:
