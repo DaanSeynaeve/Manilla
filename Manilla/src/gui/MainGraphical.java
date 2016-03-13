@@ -21,9 +21,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
 import player.Player;
+import player.Team;
 import AI.ArtificialPlayer;
 import AI.ExampleIntelligence;
 import AI.Intelligence;
+import AI.daan.MonteCarloAI;
 import AI.daan.Project2501;
 import core.FullMatch;
 import core.Logger;
@@ -41,7 +43,8 @@ public class MainGraphical extends JFrame {
 	private static final Class<? extends Intelligence>[] ais = new Class[] {
 		ExampleIntelligence.class,
 		// Giskard.class,
-		Project2501.class
+		Project2501.class,
+		MonteCarloAI.class
 	};
 	
 	private JTextField namePlayer1;
@@ -112,11 +115,10 @@ public class MainGraphical extends JFrame {
 		frame.dispose();
 		
 		Player[] playOrdered = {p1,p3,p2,p4};
-		Player[] teamOrdered = {p1,p2,p3,p4};
 		for ( GraphicalPlayer p : humans ) {
 			initGUI(p,playOrdered);
 		}
-		FullMatch m = new FullMatch(teamOrdered);
+		FullMatch m = new FullMatch(new Team(p1,p2), new Team(p3,p4));
 		try {
 			m.run();
 		} catch (InvalidCardException | IllegalShuffleException e) {

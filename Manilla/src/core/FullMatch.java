@@ -14,9 +14,17 @@ import player.Team;
  */
 public class FullMatch {
 	
+	private Team t1;
+	private Team t2;
 	private Player[] players;
 	
-	public FullMatch(Player[] players) {
+	/**
+	 * Creates a new match between the given teams.
+	 */
+	public FullMatch(Team t1, Team t2) {
+		this.t1 = t1;
+		this.t2 = t2;
+		Player[] players = {t1.getPlayer1(),t1.getPlayer2(),t2.getPlayer1(),t2.getPlayer2()};
 		this.players = players;
 	}
 
@@ -27,9 +35,6 @@ public class FullMatch {
 		Logger.log(players[1] + " : " + players[1].identify());
 		Logger.log(players[2] + " : " + players[2].identify());
 		Logger.log(players[3] + " : " + players[3].identify());
-		
-		Team t1 = new Team(players[0],players[1]);
-		Team t2 = new Team(players[2],players[3]);
 		
 		Logger.log("========== TEAMS ==========");
 		Logger.log("Team 1: " + t1.getPlayer1() + ", " + t1.getPlayer2());
@@ -81,6 +86,9 @@ public class FullMatch {
 			// shuffle
 			deck.execute(ShuffleCommand.createMultiRiffleShuffle(3));
 		}
+		(t1.getTotalScore() >= 101 ? t1 : t2).addMatchPoint();
+		t1.resetTotalScore();
+		t2.resetTotalScore();
 		Logger.log("========== MATCH ENDED ==========");
 		Logger.log("Team 1: " + t1.getTotalScore());
 		Logger.log("Team 2: " + t2.getTotalScore());

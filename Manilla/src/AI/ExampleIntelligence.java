@@ -70,5 +70,11 @@ public class ExampleIntelligence implements Intelligence {
 	public List<ShuffleCommand> chooseShuffleCommands() {
 		return Arrays.asList(ShuffleCommand.createRandomShuffleCommand());
 	}
+
+	@Override
+	public void notifyOfHand(List<Card> hand) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

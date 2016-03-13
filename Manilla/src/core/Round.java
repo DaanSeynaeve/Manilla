@@ -145,7 +145,7 @@ public class Round {
 			}
 			// STEP 4.2: DETERMINE WINNER
 			Player winner = getOwner(getBestCard());
-			Logger.log("-- Trick winner is " + winner + " --");
+			Logger.log("-- Trick (" + trick + ") winner is " + winner + " --");
 			Team winningTeam = getTeam(winner);
 			
 			// STEP 4.3: CARDS ARE AWARDED TO WINNING TEAMS POOL

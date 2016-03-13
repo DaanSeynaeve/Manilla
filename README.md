@@ -1,16 +1,6 @@
 # README #
 
-## OVER DE REPOSITORY ##
-
-**Belangrijk**: maak een fork van deze repo en werk daarop!
-Nadien maak je pull-requests om je code bij het geheel te voegen. (SWOP-systeem)
-
-## WEDSTRIJD ##
-
-Het is nog te vroeg om competities tussen de verschillende AI's op te zetten,
-maar dit is uiteindelijk de bedoeling.
-
-## SCHRIJVEN VAN JE ALGORITME ##
+## Schrijven van een custom AI-spele  ##
 
 Je mag zoveel klassen maken als je wilt op voorwaarde dat:
 
@@ -47,5 +37,3 @@ klassen aan te passen.
 ## VRAGEN/FOUTEN/VOORSTELLEN ##
 
 Laat me iets weten :) Er ontbreekt nog een hoop functionaliteit, maar de kern zou er moeten zijn.
-
-![playing_card_suits2.png](https://bitbucket.org/repo/pn87gp/images/2613342406-playing_card_suits2.png)

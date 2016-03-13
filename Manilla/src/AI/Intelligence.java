@@ -76,4 +76,13 @@ public interface Intelligence {
 	 */
 	public List<ShuffleCommand> chooseShuffleCommands();
 
+	/**
+	 * A stateful Intelligence can use this to initialize itself for the new round.
+	 * Implementing this is optional.
+	 * <br/><br/>
+	 * System usage: this method is called when each player has received their cards
+	 * at the start of a new round.
+	 */
+	public void notifyOfHand(List<Card> hand);
+
 }

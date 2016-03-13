@@ -127,7 +127,7 @@ public abstract class ShuffleCommand {
 	 * </ol>
 	 * <a href="https://www.youtube.com/watch?v=0ZXhPWkro9A">Youtube video</a><br/>
 	 * @param portionSize integer between 16 and 32
-	 * @param maximumDrop integer between 1 and 10
+	 * @param maximumDrop integer between 2 and 10
 	 * @throws IllegalArgumentException when not respecting above bounds.
 	 * @return ShuffleCommand
 	 */
@@ -136,7 +136,7 @@ public abstract class ShuffleCommand {
 
 			@Override
 			protected void shuffle(List<Card> cards) {
-				if ( portionSize < 16 || portionSize > 32 || maximumDrop < 1 || maximumDrop > 10 ) {
+				if ( portionSize < 16 || portionSize > 32 || maximumDrop < 2 || maximumDrop > 10 ) {
 					throw new IllegalArgumentException();
 				}
 				Random r = new Random();

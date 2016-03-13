@@ -78,7 +78,7 @@ public class ArtificialPlayer extends Player {
 
 	@Override
 	public void notifyOfNewRound(String dealerName) {
-		// TODO Auto-generated method stub
+		intelligence.notifyOfHand(getHand().getAsList());
 		
 	}
 

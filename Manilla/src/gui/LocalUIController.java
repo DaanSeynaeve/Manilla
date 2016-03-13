@@ -205,11 +205,12 @@ public class LocalUIController implements UIController {
 	 * PAUZE
 	 **********************************************************************/
 	
-	private int speed = 80;
+	private double speed = 50;
 	
 	@Override
 	public void pauze() {
-		int milis = (int) Math.floor((1-(speed/100))*1000);
+		int milis = (int) Math.floor((1-(speed/100))*2000);
+		//System.out.println(milis);
 		try {
 			Thread.sleep(milis);
 		} catch (InterruptedException e) {

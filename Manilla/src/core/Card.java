@@ -94,4 +94,21 @@ public final class Card implements Comparable<Card> {
 	public String toString() {
 		return symbol.toString() + " OF " + suit.toString() + "S";
 	}
+	
+	/**
+	 * To work with Set:
+	 */
+	
+	public boolean equals(Object other) {
+		if (other instanceof Card) {
+			return equals((Card) other);
+		} else {
+			return false;
+		}
+	}
+	
+	public int hashCode() {
+		return 100*(getSuit().ordinal()) + getSymbol().getStrength();
+	}
+	
 }

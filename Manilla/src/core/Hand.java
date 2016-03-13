@@ -10,6 +10,10 @@ public class Hand implements java.lang.Iterable<Card> {
 		cards = new ArrayList<Card>();
 	}
 	
+	public Hand(List<Card> cardlist) {
+		cards = new ArrayList<Card>(cardlist);	
+	}
+	
 	/************************
 	 * CARD LIST
 	 ************************/
